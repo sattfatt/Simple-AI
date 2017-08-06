@@ -24,6 +24,7 @@ MOVEUP = 119
 MOVEDOWN = 115
 
 MOVESPEED = 1
+PROJVEL = 5
 
 # ------------- #
 #     colors    #
@@ -69,8 +70,10 @@ class Entity:
 
         pass
 
-    def updateDir(self):
+    def updateDir(self, dir):
+        self.dir = dir
         pass
+
 
 # ------------- #
 #      main     #
@@ -78,6 +81,8 @@ class Entity:
 
 
 bob = Entity((200,200), (1, 1), 15, RED, DISPLAYSURF)
+
+projectiles = []
 
 prevkey = 0
 hold = False
@@ -125,7 +130,10 @@ while True:
             print('left event hold')
             bob.updatePos(np.array([0, MOVESPEED]))
 
+    if not projectiles:
+        for proj in projectiles:
 
+            proj.spawn()
 
     bob.spawn()
 
