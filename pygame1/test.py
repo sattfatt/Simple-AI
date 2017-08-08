@@ -29,8 +29,8 @@ MOVELEFT  = 97
 MOVERIGHT = 100
 MOVEUP    = 119
 MOVEDOWN  = 115
-
-MOVESPEED = 5
+MAXHEALTH = 100
+MOVESPEED = 7
 PROJVEL   = 15
 
 # ------------- #
@@ -58,6 +58,8 @@ DISPLAYSURF.fill(BLACK)
 class Entity:
 
     def __init__(self, pos, dir, size, color, surf, owner):
+        self.health = MAXHEALTH
+
         self.prevpos = (0,0)
 
         self.hit = False
@@ -146,10 +148,10 @@ class Entity:
     def collisionDetection(self, entity):
         if self.hitbox.colliderect(entity.hitbox) and self.owner != entity.owner:
             entity.collisioncount += 1
-            print(entity.owner + ' was hit by ' + self.owner + ' ' + str(entity.collisioncount) + ' time(s).')
+            entity.health -= 10
+            print(entity.owner + ' was hit by ' + self.owner + ' ' + str(entity.collisioncount) + ' time(s).' + ' Health: ' + str(entity.health))
+
             self.hit = True
-        else:
-            self.hit = False
 
 
 
@@ -166,10 +168,11 @@ def removeCondition(entity):
 
 bob = Entity((200,200), 0, 15, RED, DISPLAYSURF, 'bob')
 joe = Entity((200,300), 0, 15, RED, DISPLAYSURF, 'joe')
+dan = Entity((500,600), 0, 15, RED, DISPLAYSURF, 'dan')
 
 projectiles = []
 
-hitboxes = []
+entities = [bob, joe, dan]
 
 prevkey = 0
 
@@ -177,24 +180,25 @@ hold = False
 
 while True:
     DISPLAYSURF.fill(BLACK)
+
     # movement
     keys = pygame.key.get_pressed()
     if keys[K_a]  :
         prevkey = MOVELEFT
         #print('left event')
-        bob.updatePos(np.array([-MOVESPEED, 0]))
+        entities[0].updatePos(np.array([-MOVESPEED, 0]))
     if keys[K_d]:
         prevkey = MOVERIGHT
         #print('right event')
-        bob.updatePos(np.array([MOVESPEED, 0]))
+        entities[0].updatePos(np.array([MOVESPEED, 0]))
     if keys[K_w]:
         prevkey = MOVEUP
         #print('up event')
-        bob.updatePos(np.array([0, -MOVESPEED]))
+        entities[0].updatePos(np.array([0, -MOVESPEED]))
     if keys[K_s]:
         prevkey = MOVEDOWN
         #print('down event')
-        bob.updatePos(np.array([0, MOVESPEED]))
+        entities[0].updatePos(np.array([0, MOVESPEED]))
     #if keys[K_s] and keys[K_d]:
      #   bob.updatePos(np.array([MOVESPEED, MOVESPEED]))
 
@@ -207,9 +211,9 @@ while True:
 
         if event.type == KEYDOWN:
             if event.key == K_SPACE:
-                angle = bob.getCursorAngle()
+                angle = entities[0].getCursorAngle()
                 #print angle
-                projectiles.append(Entity((bob.pos[0], bob.pos[1]), angle, 5, WHITE, DISPLAYSURF, 'bob'))
+                projectiles.append(Entity((entities[0].pos[0], entities[0].pos[1]), angle, 5, WHITE, DISPLAYSURF, entities[0].owner))
 
     # projectile handling
     if projectiles:
@@ -220,8 +224,9 @@ while True:
             proj.updateProjectile()
 
             proj.draw()
-            print(proj.pos)
-            proj.collisionDetection(joe)
+            #print(proj.pos)
+            for entity in entities:
+                proj.collisionDetection(entity)
             #projectiles[:] = [x for x in projectiles if not bob.collisionDetection(proj)]
 
 
@@ -229,10 +234,11 @@ while True:
         projectiles[:] = [x for x in projectiles if removeCondition(x)]
 
     # entity handling
-    bob.draw()
-    bob.drawWedge(math.radians(20))
-    joe.draw()
-
+    if entities:
+        for entity in entities:
+            entity.draw()
+            entity.drawWedge(math.radians(20))
+        entities[:] = [x for x in entities if not x.health == 0]
     #bob.drawWedge(math.radians(20))
 
     pygame.display.update()
