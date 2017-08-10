@@ -12,9 +12,9 @@ MAXDISPY = 768
 
 pygame.init()
 
-DISPLAYSURF = pygame.display.set_mode((MAXDISPX,MAXDISPY), 0, 32)
+DISPLAYSURF = pygame.display.set_mode((MAXDISPX, MAXDISPY), 0, 32)
 
-DISPLAYRECT = pygame.Rect(0,0,MAXDISPX,MAXDISPY)
+DISPLAYRECT = pygame.Rect(0, 0, MAXDISPX, MAXDISPY)
 
 pygame.display.set_caption('Animation')
 
@@ -25,24 +25,24 @@ fpsClock = pygame.time.Clock()
 #     events    #
 # ------------- #
 
-MOVELEFT  = 97
+MOVELEFT = 97
 MOVERIGHT = 100
-MOVEUP    = 119
-MOVEDOWN  = 115
+MOVEUP = 119
+MOVEDOWN = 115
 MAXHEALTH = 100
-MOVESPEED = 7
-PROJVEL   = 15
+MOVESPEED = 6
+PROJVEL = 10
 
 # ------------- #
 #     colors    #
 # ------------- #
 
-BLACK = (  0,   0,   0)
+BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-RED   = (255,   0,   0)
-GREEN = (  0, 255,   0)
-BLUE  = (  0,   0, 255)
-CYAN  = (  0, 255, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+CYAN = (0, 255, 255)
 
 # ------------- #
 #    surface    #
@@ -50,17 +50,17 @@ CYAN  = (  0, 255, 255)
 
 DISPLAYSURF.fill(BLACK)
 
+
 # ------------- #
 #   Classes     #
 # ------------- #
 
 
 class Entity:
-
     def __init__(self, pos, dir, size, color, surf, owner):
         self.health = MAXHEALTH
 
-        self.prevpos = (0,0)
+        self.prevpos = (0, 0)
 
         self.hit = False
 
@@ -72,7 +72,7 @@ class Entity:
 
         self.owner = owner
 
-        self.pov = 0
+        self.pov = math.radians(20)
 
         self.pos = np.asarray(pos)
 
@@ -88,13 +88,12 @@ class Entity:
 
         self.speedMag = PROJVEL
 
-        self.speed = (float(self.speedMag*math.cos(self.dir)),
-                      float(self.speedMag*math.sin(self.dir)))
+        self.speed = (float(self.speedMag * math.cos(self.dir)),
+                      float(self.speedMag * math.sin(self.dir)))
 
         self.hitbox = pygame.Rect(self.pos[0] - size, self.pos[1] - size, size, size)
 
         self.drawhitboxflag = False
-
 
     def draw(self):
         pygame.gfxdraw.filled_circle(self.SURFACE,
@@ -113,11 +112,7 @@ class Entity:
 
         if DISPLAYRECT.collidepoint(pos[0], pos[1]):
             self.pos = pos
-        #pygame.gfxdraw.filled_circle(self.SURFACE, pos[0], pos[1], self.size, self.color)
-
-
-
-
+            # pygame.gfxdraw.filled_circle(self.SURFACE, pos[0], pos[1], self.size, self.color)
 
     def updateProjectile(self):
         self.pos = (self.pos + self.speed)
@@ -125,13 +120,13 @@ class Entity:
     def getCursorAngle(self):
         mousepos = np.array(pygame.mouse.get_pos())
         heading = mousepos - self.pos
-        #print heading
+        # print heading
         return math.atan2(heading[1], heading[0])
 
-    def drawWedge(self, pov):
+    def drawWedge(self):
         # creates wedge with variable pov
-        self.pov = pov
-        self.dir = self.getCursorAngle()
+
+        # self.dir = self.getCursorAngle()
         endpointupper = (self.wedgeMag * math.cos(self.pov / 2 + self.dir) + self.pos[0],
                          self.wedgeMag * math.sin(self.pov / 2 + self.dir) + self.pos[1])
         endpointlower = (self.wedgeMag * math.cos(-(self.pov / 2) + self.dir) + self.pos[0],
@@ -140,20 +135,42 @@ class Entity:
         pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (endpointlower[0], endpointlower[1]))
 
     def updateHitbox(self):
-        self.hitbox = pygame.Rect(self.pos[0] - self.size, self.pos[1] - self.size, self.size*2, self.size*2)
+        self.hitbox = pygame.Rect(self.pos[0] - self.size, self.pos[1] - self.size, self.size * 2, self.size * 2)
 
     def drawHitbox(self):
         pygame.draw.rect(DISPLAYSURF, GREEN, self.hitbox, 2)
 
     def collisionDetection(self, entity):
+        '''indicates whether the projectile hit and should be deleted. Also modifies the health of target'''
+
         if self.hitbox.colliderect(entity.hitbox) and self.owner != entity.owner:
             entity.collisioncount += 1
             entity.health -= 10
-            print(entity.owner + ' was hit by ' + self.owner + ' ' + str(entity.collisioncount) + ' time(s).' + ' Health: ' + str(entity.health))
-
+            print(entity.owner + ' was hit by ' + self.owner + ' ' + str(
+                entity.collisioncount) + ' time(s).' + ' Health: ' + str(entity.health))
             self.hit = True
 
+    def inWedge(self, projectile):
+        '''returns  projectile owner in the FOV.
+        just check the argument of the projectile relative to the self'''
 
+        relativepos = projectile.pos - self.pos
+        argument = math.atan2(relativepos[1], relativepos[0])
+        if self.dir + self.pov / 2 >= argument >= self.dir - self.pov / 2 and projectile.owner != self.owner:
+            return projectile.owner
+
+    def control(self, controlframe):
+        ''' Based on the control frame input, the entity will be moved and/or rotated '''
+        self.pos += controlframe.deltaDirection
+        self.dir += controlframe.deltaHeading
+
+
+class ControlFrame:
+    def __init__(self, id):
+        self.deltaHeading = 0
+        self.deltaDirection = (0, 0)
+        self.fire = False
+        self.id = id
 
 
 def removeCondition(entity):
@@ -162,13 +179,26 @@ def removeCondition(entity):
     else:
         return True
 
+
+class NNGA(ControlFrame):
+    ''' NN with weights chosen by GA'''
+    def __init__(self, owner):
+        ControlFrame.__init__(self, owner)
+        pass
+
+    def updateWeights(self, results, ):
+        pass
+
+
+
+
 # ------------- #
 #      main     #
 # ------------- #
 
-bob = Entity((200,200), 0, 15, RED, DISPLAYSURF, 'bob')
-joe = Entity((200,300), 0, 15, RED, DISPLAYSURF, 'joe')
-dan = Entity((500,600), 0, 15, RED, DISPLAYSURF, 'dan')
+bob = Entity((200, 200), 0, 15, RED, DISPLAYSURF, 'bob')
+joe = Entity((200, 300), 0, 15, RED, DISPLAYSURF, 'joe')
+dan = Entity((500, 600), 0, 15, RED, DISPLAYSURF, 'dan')
 
 projectiles = []
 
@@ -183,24 +213,24 @@ while True:
 
     # movement
     keys = pygame.key.get_pressed()
-    if keys[K_a]  :
+    if keys[K_a]:
         prevkey = MOVELEFT
-        #print('left event')
+        # print('left event')
         entities[0].updatePos(np.array([-MOVESPEED, 0]))
     if keys[K_d]:
         prevkey = MOVERIGHT
-        #print('right event')
+        # print('right event')
         entities[0].updatePos(np.array([MOVESPEED, 0]))
     if keys[K_w]:
         prevkey = MOVEUP
-        #print('up event')
+        # print('up event')
         entities[0].updatePos(np.array([0, -MOVESPEED]))
     if keys[K_s]:
         prevkey = MOVEDOWN
-        #print('down event')
+        # print('down event')
         entities[0].updatePos(np.array([0, MOVESPEED]))
-    #if keys[K_s] and keys[K_d]:
-     #   bob.updatePos(np.array([MOVESPEED, MOVESPEED]))
+        # if keys[K_s] and keys[K_d]:
+        #   bob.updatePos(np.array([MOVESPEED, MOVESPEED]))
 
     # event handling
     for event in pygame.event.get():
@@ -212,35 +242,38 @@ while True:
         if event.type == KEYDOWN:
             if event.key == K_SPACE:
                 angle = entities[0].getCursorAngle()
-                #print angle
-                projectiles.append(Entity((entities[0].pos[0], entities[0].pos[1]), angle, 5, WHITE, DISPLAYSURF, entities[0].owner))
+                # print angle
+                projectiles.append(
+                    Entity((entities[0].pos[0], entities[0].pos[1]), angle, 5, WHITE, DISPLAYSURF, entities[0].owner))
 
     # projectile handling
     if projectiles:
-        #print('Projectile(s) Present!')
+        # print('Projectile(s) Present!')
 
         for proj in projectiles:
 
             proj.updateProjectile()
 
             proj.draw()
-            #print(proj.pos)
+            # print(proj.pos)
             for entity in entities:
                 proj.collisionDetection(entity)
-            #projectiles[:] = [x for x in projectiles if not bob.collisionDetection(proj)]
-
+                temp = entity.inWedge(proj)
+                if temp:
+                    print(temp + '\'s projectile is in ' + entity.owner + '\'s FOV')
+                    # projectiles[:] = [x for x in projectiles if not bob.collisionDetection(proj)]
 
         # remove projectile from list if remove condition is met.
         projectiles[:] = [x for x in projectiles if removeCondition(x)]
 
     # entity handling
+    entities[0].dir = entities[0].getCursorAngle()
     if entities:
         for entity in entities:
             entity.draw()
-            entity.drawWedge(math.radians(20))
+            entity.drawWedge()
         entities[:] = [x for x in entities if not x.health == 0]
-    #bob.drawWedge(math.radians(20))
+    # bob.drawWedge(math.radians(20))
 
     pygame.display.update()
     fpsClock.tick(FPS)
-
