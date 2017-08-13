@@ -72,11 +72,11 @@ class Entity:
 
         self.owner = owner
 
-        self.pov = math.radians(20)
+        self.pov = 20
 
         self.pos = np.asarray(pos)
 
-        self.dir = float(dir)
+        self.dir = dir
 
         self.cursorangle = 0
 
@@ -88,8 +88,8 @@ class Entity:
 
         self.speedMag = PROJVEL
 
-        self.speed = (float(self.speedMag * math.cos(self.dir)),
-                      float(self.speedMag * math.sin(self.dir)))
+        self.speed = (float(self.speedMag * math.cos(math.radians(self.dir))),
+                      float(self.speedMag * math.sin(math.radians(self.dir))))
 
         self.hitbox = pygame.Rect(self.pos[0] - size, self.pos[1] - size, size, size)
 
@@ -121,16 +121,17 @@ class Entity:
         mousepos = np.array(pygame.mouse.get_pos())
         heading = mousepos - self.pos
         # print heading
-        return math.atan2(heading[1], heading[0])
+        return math.degrees(math.atan2(heading[1], heading[0]))
 
     def drawWedge(self):
         # creates wedge with variable pov
-
+        pov = math.radians(self.pov)
+        dir = math.radians(self.dir)
         # self.dir = self.getCursorAngle()
-        endpointupper = (self.wedgeMag * math.cos(self.pov / 2 + self.dir) + self.pos[0],
-                         self.wedgeMag * math.sin(self.pov / 2 + self.dir) + self.pos[1])
-        endpointlower = (self.wedgeMag * math.cos(-(self.pov / 2) + self.dir) + self.pos[0],
-                         self.wedgeMag * math.sin(-(self.pov / 2) + self.dir) + self.pos[1])
+        endpointupper = (self.wedgeMag * math.cos(pov / 2 + dir) + self.pos[0],
+                         self.wedgeMag * math.sin(pov / 2 + dir) + self.pos[1])
+        endpointlower = (self.wedgeMag * math.cos(-(pov / 2) + dir) + self.pos[0],
+                         self.wedgeMag * math.sin(-(pov / 2) + dir) + self.pos[1])
         pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (endpointupper[0], endpointupper[1]))
         pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (endpointlower[0], endpointlower[1]))
 
@@ -156,7 +157,9 @@ class Entity:
 
         relativepos = projectile.pos - self.pos
         argument = math.atan2(relativepos[1], relativepos[0])
-        if self.dir + self.pov / 2 >= argument >= self.dir - self.pov / 2 and projectile.owner != self.owner:
+        arg = math.degrees(argument) + (360*math.floor(self.dir/360))
+        #print(arg)
+        if (self.dir + self.pov/2) >= arg >= (self.dir - self.pov/2) and projectile.owner != self.owner:
             return projectile.owner
 
     def control(self, controlframe):
@@ -198,15 +201,17 @@ class NNGA(ControlFrame):
 
 bob = Entity((200, 200), 0, 15, RED, DISPLAYSURF, 'bob')
 joe = Entity((200, 300), 0, 15, RED, DISPLAYSURF, 'joe')
-dan = Entity((500, 600), 0, 15, RED, DISPLAYSURF, 'dan')
+#dan = Entity((500, 600), 0, 15, RED, DISPLAYSURF, 'dan')
 
 projectiles = []
 
-entities = [bob, joe, dan]
+entities = [bob, joe]
 
 prevkey = 0
 
 hold = False
+
+counter = 0
 
 while True:
     DISPLAYSURF.fill(BLACK)
@@ -245,6 +250,11 @@ while True:
                 # print angle
                 projectiles.append(
                     Entity((entities[0].pos[0], entities[0].pos[1]), angle, 5, WHITE, DISPLAYSURF, entities[0].owner))
+            if event.key == K_l:
+                testframe = ControlFrame('bob')
+                testframe.deltaHeading = 20
+                testframe.deltaDirection = (0, 0)
+                joe.control(testframe)
 
     # projectile handling
     if projectiles:
@@ -260,6 +270,9 @@ while True:
                 proj.collisionDetection(entity)
                 temp = entity.inWedge(proj)
                 if temp:
+                    counter += 1
+                    print counter
+                    print('checking: ' + entity.owner)
                     print(temp + '\'s projectile is in ' + entity.owner + '\'s FOV')
                     # projectiles[:] = [x for x in projectiles if not bob.collisionDetection(proj)]
 
@@ -277,3 +290,4 @@ while True:
 
     pygame.display.update()
     fpsClock.tick(FPS)
+
