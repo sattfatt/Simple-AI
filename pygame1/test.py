@@ -76,6 +76,8 @@ class Entity:
 
         self.pos = np.asarray(pos)
 
+        self.truepos = self.pos.astype(float)
+
         self.dir = dir
 
         self.cursorangle = 0
@@ -108,10 +110,11 @@ class Entity:
 
     def updatePos(self, dpos):
 
-        pos = (self.pos + np.round(dpos)).astype(int)
+        pos = np.round(self.truepos + dpos).astype(int)
 
         if DISPLAYRECT.collidepoint(pos[0], pos[1]):
             self.pos = pos
+            self.truepos += dpos
             # pygame.gfxdraw.filled_circle(self.SURFACE, pos[0], pos[1], self.size, self.color)
 
     def updateProjectile(self):
@@ -132,8 +135,8 @@ class Entity:
                          self.wedgeMag * math.sin(pov / 2 + dir) + self.pos[1])
         endpointlower = (self.wedgeMag * math.cos(-(pov / 2) + dir) + self.pos[0],
                          self.wedgeMag * math.sin(-(pov / 2) + dir) + self.pos[1])
-        pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (endpointupper[0], endpointupper[1]))
-        pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (endpointlower[0], endpointlower[1]))
+        pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (endpointupper[0], endpointupper[1]),1)
+        pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (endpointlower[0], endpointlower[1]),1)
 
     def updateHitbox(self):
         self.hitbox = pygame.Rect(self.pos[0] - self.size, self.pos[1] - self.size, self.size * 2, self.size * 2)
@@ -160,11 +163,11 @@ class Entity:
         arg = math.degrees(argument) + (360*math.floor(self.dir/360))
         #print(arg)
         if (self.dir + self.pov/2) >= arg >= (self.dir - self.pov/2) and projectile.owner != self.owner:
-            return projectile.owner
+            return True
 
     def control(self, controlframe):
         ''' Based on the control frame input, the entity will be moved and/or rotated '''
-        self.pos += controlframe.deltaDirection
+        self.updatePos(controlframe.deltaDirection)
         self.dir += controlframe.deltaHeading
 
 
@@ -183,13 +186,45 @@ def removeCondition(entity):
         return True
 
 
-class NNGA(ControlFrame):
+class NN(ControlFrame):
     ''' NN with weights chosen by GA'''
     def __init__(self, owner):
         ControlFrame.__init__(self, owner)
-        pass
+        # initialize weights and biases with gaussian N(0,1) random values
+        self.w1 = np.array(np.random.randn(3, 4))
+        self.b1 = np.array(np.random.randn(3))
+        self.w2 = np.array(np.random.randn(3, 3))
+        self.b2 = np.array(np.random.randn(3))
+        self.w3 = np.array(np.random.randn(4, 3))
+        self.b3 = np.array(np.random.randn(4))
 
-    def updateWeights(self, results, ):
+    def out(self, input):
+        # output
+        # -              -
+        # |   delta X    |
+        # |   delta Y    |
+        # | delta Angle  |
+        # | Fire boolean |
+        # -              -
+        #
+        layer1Out = np.tanh(self.w1 @ np.asarray(input) + self.b1)
+
+        layer2Out = np.tanh(self.w2 @ np.asarray(layer1Out) + self.b2)
+
+        preIndicator = (self.w3 @ layer2Out) + self.b3
+
+        finalLayerOut = (np.tanh(preIndicator[0]),
+                                 np.tanh(preIndicator[1]),
+                                 np.tanh(preIndicator[2]),
+                                 np.piecewise(preIndicator[3], [preIndicator[3] < 0, preIndicator[3] >= 0], [0, 1]))
+
+        ControlFrame.deltaDirection = (finalLayerOut[0], finalLayerOut[1])
+        ControlFrame.deltaHeading = finalLayerOut[2]
+        ControlFrame.fire = finalLayerOut[3]
+
+        return ControlFrame
+
+    def updateWeights(self, weights):
         pass
 
 
@@ -198,6 +233,8 @@ class NNGA(ControlFrame):
 # ------------- #
 #      main     #
 # ------------- #
+
+testNN = NN('bob')
 
 bob = Entity((200, 200), 0, 15, RED, DISPLAYSURF, 'bob')
 joe = Entity((200, 300), 0, 15, RED, DISPLAYSURF, 'joe')
@@ -211,9 +248,10 @@ prevkey = 0
 
 hold = False
 
-counter = 0
+
 
 while True:
+    counter = 0
     DISPLAYSURF.fill(BLACK)
 
     # movement
@@ -251,10 +289,7 @@ while True:
                 projectiles.append(
                     Entity((entities[0].pos[0], entities[0].pos[1]), angle, 5, WHITE, DISPLAYSURF, entities[0].owner))
             if event.key == K_l:
-                testframe = ControlFrame('bob')
-                testframe.deltaHeading = 20
-                testframe.deltaDirection = (0, 0)
-                joe.control(testframe)
+                pass
 
     # projectile handling
     if projectiles:
@@ -271,10 +306,10 @@ while True:
                 temp = entity.inWedge(proj)
                 if temp:
                     counter += 1
-                    print counter
-                    print('checking: ' + entity.owner)
-                    print(temp + '\'s projectile is in ' + entity.owner + '\'s FOV')
-                    # projectiles[:] = [x for x in projectiles if not bob.collisionDetection(proj)]
+                    #----DEBUG----#
+                    #print counter
+                    #print('checking: ' + entity.owner)
+                    #print(temp + '\'s projectile is in ' + entity.owner + '\'s FOV')
 
         # remove projectile from list if remove condition is met.
         projectiles[:] = [x for x in projectiles if removeCondition(x)]
@@ -286,7 +321,12 @@ while True:
             entity.draw()
             entity.drawWedge()
         entities[:] = [x for x in entities if not x.health == 0]
-    # bob.drawWedge(math.radians(20))
+
+    input = (joe.pos[0],joe.pos[1],joe.dir,counter)
+    #print(input)
+    testmove = testNN.out(input)
+    print(str(testmove.deltaDirection) + " " + str(testmove.deltaHeading) + " " + str(testmove.fire))
+    joe.control(testmove)
 
     pygame.display.update()
     fpsClock.tick(FPS)
