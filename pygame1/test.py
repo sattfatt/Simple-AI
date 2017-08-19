@@ -5,10 +5,13 @@ import numpy as np
 import math
 
 # main
+PROJECTILEINTERVAL = 15
 
+MAXDISPX = 1500#1024
+MAXDISPY = 1000#768
 
-MAXDISPX = 1024
-MAXDISPY = 768
+MINRANDPARM = -10000
+MAXRANDPARM = 10000
 
 pygame.init()
 
@@ -20,6 +23,7 @@ pygame.display.set_caption('Animation')
 
 FPS = 60
 fpsClock = pygame.time.Clock()
+
 
 # ------------- #
 #     events    #
@@ -58,6 +62,11 @@ DISPLAYSURF.fill(BLACK)
 
 class Entity:
     def __init__(self, pos, dir, size, color, surf, owner):
+
+        self.projectileint = 0
+
+        self.clock = pygame.time.Clock()
+
         self.health = MAXHEALTH
 
         self.prevpos = (0, 0)
@@ -170,8 +179,13 @@ class Entity:
         self.updatePos(controlframe.deltaDirection)
         self.dir += controlframe.deltaHeading
 
+    def state(self):
+
+        return (joe.pos[0],joe.pos[1],joe.dir,counter)
+
 
 class ControlFrame:
+
     def __init__(self, id):
         self.deltaHeading = 0
         self.deltaDirection = (0, 0)
@@ -191,12 +205,12 @@ class NN(ControlFrame):
     def __init__(self, owner):
         ControlFrame.__init__(self, owner)
         # initialize weights and biases with gaussian N(0,1) random values
-        self.w1 = np.array(np.random.randn(3, 4))
-        self.b1 = np.array(np.random.randn(3))
-        self.w2 = np.array(np.random.randn(3, 3))
-        self.b2 = np.array(np.random.randn(3))
-        self.w3 = np.array(np.random.randn(4, 3))
-        self.b3 = np.array(np.random.randn(4))
+        self.w1 = np.array(np.random.randint(MINRANDPARM,MAXRANDPARM,(3,4)))
+        self.b1 = np.array(np.random.randint(MINRANDPARM,MAXRANDPARM,(3,)))
+        self.w2 = np.array(np.random.randint(MINRANDPARM,MAXRANDPARM,(3,3)))
+        self.b2 = np.array(np.random.randint(MINRANDPARM,MAXRANDPARM,(3,)))
+        self.w3 = np.array(np.random.randint(MINRANDPARM,MAXRANDPARM,(4,3)))
+        self.b3 = np.array(np.random.randint(MINRANDPARM,MAXRANDPARM,(4,)))
 
     def out(self, input):
         # output
@@ -234,21 +248,18 @@ class NN(ControlFrame):
 #      main     #
 # ------------- #
 
-testNN = NN('bob')
+NN1 = NN('bob')
+NN2 = NN('joe')
 
-bob = Entity((200, 200), 0, 15, RED, DISPLAYSURF, 'bob')
-joe = Entity((200, 300), 0, 15, RED, DISPLAYSURF, 'joe')
+bob = Entity((np.random.randint(1,MAXDISPX-1), np.random.randint(1,MAXDISPY-1)), 0, 15, RED, DISPLAYSURF, 'bob')
+joe = Entity((np.random.randint(1,MAXDISPX-1), np.random.randint(1,MAXDISPY-1)), 0, 15, RED, DISPLAYSURF, 'joe')
 #dan = Entity((500, 600), 0, 15, RED, DISPLAYSURF, 'dan')
+
+nets = [NN1, NN2]
 
 projectiles = []
 
 entities = [bob, joe]
-
-prevkey = 0
-
-hold = False
-
-
 
 while True:
     counter = 0
@@ -315,18 +326,21 @@ while True:
         projectiles[:] = [x for x in projectiles if removeCondition(x)]
 
     # entity handling
-    entities[0].dir = entities[0].getCursorAngle()
+#    entities[0].dir = entities[0].getCursorAngle()
     if entities:
         for entity in entities:
             entity.draw()
             entity.drawWedge()
+            # create list of NNs for each entity
+            nextmove = nets[entities.index(entity)].out(entity.state())
+            print(str(nextmove.deltaDirection) + " " + str(nextmove.deltaHeading) + " " + str(nextmove.fire))
+            entity.control(nextmove)
+            entity.projectileint += 1
+            if nextmove.fire and entity.projectileint >= PROJECTILEINTERVAL:
+                entity.projectileint = 0
+                projectiles.append(Entity((entity.pos[0], entity.pos[1]), entity.dir, 5, WHITE, DISPLAYSURF, entity.owner))
         entities[:] = [x for x in entities if not x.health == 0]
 
-    input = (joe.pos[0],joe.pos[1],joe.dir,counter)
-    #print(input)
-    testmove = testNN.out(input)
-    print(str(testmove.deltaDirection) + " " + str(testmove.deltaHeading) + " " + str(testmove.fire))
-    joe.control(testmove)
 
     pygame.display.update()
     fpsClock.tick(FPS)
