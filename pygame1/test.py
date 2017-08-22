@@ -7,8 +7,10 @@ import math
 # main
 PROJECTILEINTERVAL = 15
 
-MAXDISPX = 1500#1024
-MAXDISPY = 1000#768
+MAXNEURONSPERLAYER = 100
+
+MAXDISPX = 1500  # 1024
+MAXDISPY = 1000  # 768
 
 MINRANDPARM = -10000
 MAXRANDPARM = 10000
@@ -21,9 +23,8 @@ DISPLAYRECT = pygame.Rect(0, 0, MAXDISPX, MAXDISPY)
 
 pygame.display.set_caption('Animation')
 
-FPS = 60
+FPS = 120
 fpsClock = pygame.time.Clock()
-
 
 # ------------- #
 #     events    #
@@ -34,9 +35,9 @@ MOVERIGHT = 100
 MOVEUP = 119
 MOVEDOWN = 115
 MAXHEALTH = 100
-MOVESPEED = 6
-PROJVEL = 10
-
+MOVESPEED = 1
+PROJVEL = 5
+MAXSPINRATE = 2
 # ------------- #
 #     colors    #
 # ------------- #
@@ -85,6 +86,8 @@ class Entity:
 
         self.pos = np.asarray(pos)
 
+        self.detectEnemy = False
+
         self.truepos = self.pos.astype(float)
 
         self.dir = dir
@@ -119,11 +122,11 @@ class Entity:
 
     def updatePos(self, dpos):
 
-        pos = np.round(self.truepos + dpos).astype(int)
+        pos = np.round(self.truepos + (dpos[0] * MOVESPEED, dpos[1] * MOVESPEED)).astype(int)
 
         if DISPLAYRECT.collidepoint(pos[0], pos[1]):
             self.pos = pos
-            self.truepos += dpos
+            self.truepos += (dpos[0] * MOVESPEED, dpos[1] * MOVESPEED)
             # pygame.gfxdraw.filled_circle(self.SURFACE, pos[0], pos[1], self.size, self.color)
 
     def updateProjectile(self):
@@ -144,8 +147,8 @@ class Entity:
                          self.wedgeMag * math.sin(pov / 2 + dir) + self.pos[1])
         endpointlower = (self.wedgeMag * math.cos(-(pov / 2) + dir) + self.pos[0],
                          self.wedgeMag * math.sin(-(pov / 2) + dir) + self.pos[1])
-        pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (endpointupper[0], endpointupper[1]),1)
-        pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (endpointlower[0], endpointlower[1]),1)
+        pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (endpointupper[0], endpointupper[1]), 1)
+        pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (endpointlower[0], endpointlower[1]), 1)
 
     def updateHitbox(self):
         self.hitbox = pygame.Rect(self.pos[0] - self.size, self.pos[1] - self.size, self.size * 2, self.size * 2)
@@ -169,10 +172,14 @@ class Entity:
 
         relativepos = projectile.pos - self.pos
         argument = math.atan2(relativepos[1], relativepos[0])
-        arg = math.degrees(argument) + (360*math.floor(self.dir/360))
-        #print(arg)
-        if (self.dir + self.pov/2) >= arg >= (self.dir - self.pov/2) and projectile.owner != self.owner:
+        arg = math.degrees(argument) + (360 * math.floor(self.dir / 360))
+        # print(arg)
+        if (self.dir + self.pov / 2) >= arg >= (self.dir - self.pov / 2) and projectile.owner != self.owner:
+            self.detectEnemy = True
             return True
+        else:
+            self.detectEnemy = False
+            return False
 
     def control(self, controlframe):
         ''' Based on the control frame input, the entity will be moved and/or rotated '''
@@ -181,11 +188,10 @@ class Entity:
 
     def state(self):
 
-        return (joe.pos[0],joe.pos[1],joe.dir,counter)
+        return (self.pos[0], self.pos[1], self.dir, self.detectEnemy, self.health)
 
 
 class ControlFrame:
-
     def __init__(self, id):
         self.deltaHeading = 0
         self.deltaDirection = (0, 0)
@@ -202,15 +208,16 @@ def removeCondition(entity):
 
 class NN(ControlFrame):
     ''' NN with weights chosen by GA'''
+
     def __init__(self, owner):
         ControlFrame.__init__(self, owner)
         # initialize weights and biases with gaussian N(0,1) random values
-        self.w1 = np.array(np.random.randint(MINRANDPARM,MAXRANDPARM,(3,4)))
-        self.b1 = np.array(np.random.randint(MINRANDPARM,MAXRANDPARM,(3,)))
-        self.w2 = np.array(np.random.randint(MINRANDPARM,MAXRANDPARM,(3,3)))
-        self.b2 = np.array(np.random.randint(MINRANDPARM,MAXRANDPARM,(3,)))
-        self.w3 = np.array(np.random.randint(MINRANDPARM,MAXRANDPARM,(4,3)))
-        self.b3 = np.array(np.random.randint(MINRANDPARM,MAXRANDPARM,(4,)))
+        self.w1 = np.array(np.random.randint(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER, 5)))
+        self.b1 = np.array(np.random.randint(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER,)))
+        self.w2 = np.array(np.random.randint(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER, MAXNEURONSPERLAYER)))
+        self.b2 = np.array(np.random.randint(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER,)))
+        self.w3 = np.array(np.random.randint(MINRANDPARM, MAXRANDPARM, (5, MAXNEURONSPERLAYER)))
+        self.b3 = np.array(np.random.randint(MINRANDPARM, MAXRANDPARM, (5,)))
 
     def out(self, input):
         # output
@@ -228,43 +235,98 @@ class NN(ControlFrame):
         preIndicator = (self.w3 @ layer2Out) + self.b3
 
         finalLayerOut = (np.tanh(preIndicator[0]),
-                                 np.tanh(preIndicator[1]),
-                                 np.tanh(preIndicator[2]),
-                                 np.piecewise(preIndicator[3], [preIndicator[3] < 0, preIndicator[3] >= 0], [0, 1]))
+                         np.tanh(preIndicator[1]),
+                         np.tanh(preIndicator[2]),
+                         np.piecewise(preIndicator[3], [preIndicator[3] < 0, preIndicator[3] >= 0], [0, 1]))
 
         ControlFrame.deltaDirection = (finalLayerOut[0], finalLayerOut[1])
-        ControlFrame.deltaHeading = finalLayerOut[2]
+        ControlFrame.deltaHeading = finalLayerOut[2] * MAXSPINRATE
         ControlFrame.fire = finalLayerOut[3]
 
         return ControlFrame
 
-    def updateWeights(self, weights):
+    def updateWeights(self):
         pass
 
 
+def breed(NN1, NN2, owner):
+    '''Takes in two NN's and outputs a child with randomly chosen Neuron weight clusters from both'''
+    baby = NN(owner)
 
+    for row in range(MAXNEURONSPERLAYER):
+        choice = np.random.binomial(1, 0.5)
+        if choice:
+            baby.w1[row, :] = NN1.w1[np.random.randint(0, MAXNEURONSPERLAYER), :]
+            # yes may get same weights for multiple neurons....
+        else:
+            baby.w1[row, :] = NN2.w1[np.random.randint(0, MAXNEURONSPERLAYER), :]
+
+    for row in range(MAXNEURONSPERLAYER):
+        choice = np.random.binomial(1, 0.5)
+        if choice:
+            baby.w2[row, :] = NN1.w2[np.random.randint(0, MAXNEURONSPERLAYER), :]
+            # yes may get same weights for multiple neurons....
+        else:
+            baby.w2[row, :] = NN2.w2[np.random.randint(0, MAXNEURONSPERLAYER), :]
+
+    for row in range(5):
+        choice = np.random.binomial(1, 0.5)
+        if choice:
+            baby.w3[row, :] = NN1.w3[np.random.randint(0, 5), :]
+            # yes may get same weights for multiple neurons....
+        else:
+            baby.w3[row, :] = NN2.w3[np.random.randint(0, 5), :]
+
+    for weight in range(MAXNEURONSPERLAYER):
+        choice = np.random.binomial(1, 0.5)
+        if choice:
+            baby.b1[weight] = NN1.b1[np.random.randint(0, MAXNEURONSPERLAYER)]
+        else:
+            baby.b1[weight] = NN2.b1[np.random.randint(0, MAXNEURONSPERLAYER)]
+
+    for weight in range(MAXNEURONSPERLAYER):
+        choice = np.random.binomial(1, 0.5)
+        if choice:
+            baby.b2[weight] = NN1.b2[np.random.randint(0, MAXNEURONSPERLAYER)]
+        else:
+            baby.b2[weight] = NN2.b2[np.random.randint(0, MAXNEURONSPERLAYER)]
+
+    for weight in range(5):
+        choice = np.random.binomial(1, 0.5)
+        if choice:
+            baby.b3[weight] = NN1.b3[np.random.randint(0, 5)]
+        else:
+            baby.b3[weight] = NN2.b3[np.random.randint(0, 5)]
+
+    return baby
 
 # ------------- #
 #      main     #
 # ------------- #
 
-NN1 = NN('bob')
-NN2 = NN('joe')
+# create 10 random NNs for each AI
 
-bob = Entity((np.random.randint(1,MAXDISPX-1), np.random.randint(1,MAXDISPY-1)), 0, 15, RED, DISPLAYSURF, 'bob')
-joe = Entity((np.random.randint(1,MAXDISPX-1), np.random.randint(1,MAXDISPY-1)), 0, 15, RED, DISPLAYSURF, 'joe')
-#dan = Entity((500, 600), 0, 15, RED, DISPLAYSURF, 'dan')
+NNlist1 = [NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN('bob')]
 
-nets = [NN1, NN2]
+NNlist2 = [NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe')]
+
+bob = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, RED, DISPLAYSURF, 'bob')
+joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, RED, DISPLAYSURF, 'joe')
+
+
+#start with the first of 10 nets
+nets = [NNlist1[0], NNlist2[0]]
+
 
 projectiles = []
 
 entities = [bob, joe]
 
-while True:
-    counter = 0
-    DISPLAYSURF.fill(BLACK)
+testbaby = breed(NNlist1[0], NNlist2[0], 'bob')
 
+while True:
+
+    DISPLAYSURF.fill(BLACK)
     # movement
     keys = pygame.key.get_pressed()
     if keys[K_a]:
@@ -307,41 +369,44 @@ while True:
         # print('Projectile(s) Present!')
 
         for proj in projectiles:
-
             proj.updateProjectile()
 
             proj.draw()
             # print(proj.pos)
-            for entity in entities:
-                proj.collisionDetection(entity)
-                temp = entity.inWedge(proj)
-                if temp:
-                    counter += 1
-                    #----DEBUG----#
-                    #print counter
-                    #print('checking: ' + entity.owner)
-                    #print(temp + '\'s projectile is in ' + entity.owner + '\'s FOV')
+            # for entity in entities:
+            #    proj.collisionDetection(entity)
+            #    temp = entity.inWedge(proj)
+            #    if temp:
+            #        counter += 1
+            # ----DEBUG----#
+            # print counter
+            # print('checking: ' + entity.owner)
+            # print(temp + '\'s projectile is in ' + entity.owner + '\'s FOV')
 
         # remove projectile from list if remove condition is met.
         projectiles[:] = [x for x in projectiles if removeCondition(x)]
 
-    # entity handling
-#    entities[0].dir = entities[0].getCursorAngle()
+        # entity handling
+    #    entities[0].dir = entities[0].getCursorAngle()
     if entities:
         for entity in entities:
             entity.draw()
             entity.drawWedge()
+            for players in entities:
+                if players != entity:
+                    if (entity.inWedge(players)):
+                        print(entity.owner + ' detects ' + players.owner)
+
             # create list of NNs for each entity
             nextmove = nets[entities.index(entity)].out(entity.state())
-            print(str(nextmove.deltaDirection) + " " + str(nextmove.deltaHeading) + " " + str(nextmove.fire))
+            # print(str(nextmove.deltaDirection) + " " + str(nextmove.deltaHeading) + " " + str(nextmove.fire))
             entity.control(nextmove)
             entity.projectileint += 1
             if nextmove.fire and entity.projectileint >= PROJECTILEINTERVAL:
                 entity.projectileint = 0
-                projectiles.append(Entity((entity.pos[0], entity.pos[1]), entity.dir, 5, WHITE, DISPLAYSURF, entity.owner))
+                projectiles.append(
+                    Entity((entity.pos[0], entity.pos[1]), entity.dir, 5, WHITE, DISPLAYSURF, entity.owner))
         entities[:] = [x for x in entities if not x.health == 0]
-
 
     pygame.display.update()
     fpsClock.tick(FPS)
-
