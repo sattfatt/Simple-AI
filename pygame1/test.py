@@ -5,24 +5,8 @@ import numpy as np
 import math
 
 # main
-PROJECTILEINTERVAL = 15
-
-MAXNEURONSPERLAYER = 100
-
-MAXDISPX = 1500  # 1024
-MAXDISPY = 1000  # 768
-
-MINRANDPARM = -10000
-MAXRANDPARM = 10000
-
 pygame.init()
-
-DISPLAYSURF = pygame.display.set_mode((MAXDISPX, MAXDISPY), 0, 32)
-
-DISPLAYRECT = pygame.Rect(0, 0, MAXDISPX, MAXDISPY)
-
 pygame.display.set_caption('Animation')
-
 FPS = 120
 fpsClock = pygame.time.Clock()
 
@@ -34,10 +18,22 @@ MOVELEFT = 97
 MOVERIGHT = 100
 MOVEUP = 119
 MOVEDOWN = 115
+
+# ------------- #
+#    params     #
+# ------------- #
+
 MAXHEALTH = 100
 MOVESPEED = 1
 PROJVEL = 5
 MAXSPINRATE = 2
+PROJECTILEINTERVAL = 15
+MAXNEURONSPERLAYER = 10
+MAXDISPX = 1500  # 1024
+MAXDISPY = 1000  # 768
+MINRANDPARM = -10000
+MAXRANDPARM = 10000
+
 # ------------- #
 #     colors    #
 # ------------- #
@@ -53,9 +49,12 @@ CYAN = (0, 255, 255)
 #    surface    #
 # ------------- #
 
+
+DISPLAYSURF = pygame.display.set_mode((MAXDISPX, MAXDISPY), 0, 32)
+
+DISPLAYRECT = pygame.Rect(0, 0, MAXDISPX, MAXDISPY)
+
 DISPLAYSURF.fill(BLACK)
-
-
 # ------------- #
 #   Classes     #
 # ------------- #
@@ -219,6 +218,8 @@ class NN(ControlFrame):
         self.w3 = np.array(np.random.randint(MINRANDPARM, MAXRANDPARM, (5, MAXNEURONSPERLAYER)))
         self.b3 = np.array(np.random.randint(MINRANDPARM, MAXRANDPARM, (5,)))
 
+        self.score = 0
+
     def out(self, input):
         # output
         # -              -
@@ -300,6 +301,7 @@ def breed(NN1, NN2, owner):
 
     return baby
 
+
 # ------------- #
 #      main     #
 # ------------- #
@@ -313,10 +315,8 @@ NNlist2 = [NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN(
 bob = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, RED, DISPLAYSURF, 'bob')
 joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, RED, DISPLAYSURF, 'joe')
 
-
-#start with the first of 10 nets
+# start with the first of 10 nets
 nets = [NNlist1[0], NNlist2[0]]
-
 
 projectiles = []
 
