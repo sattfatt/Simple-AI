@@ -7,7 +7,7 @@ import math
 # main
 pygame.init()
 pygame.display.set_caption('Animation')
-FPS = 120
+FPS = 240
 fpsClock = pygame.time.Clock()
 
 # ------------- #
@@ -22,13 +22,13 @@ MOVEDOWN = 115
 # ------------- #
 #    params     #
 # ------------- #
-
+MAXITERATIONS = 1000
 MAXHEALTH = 100
 MOVESPEED = 1
-PROJVEL = 5
-MAXSPINRATE = 2
+PROJVEL = 3
+MAXSPINRATE = 1
 PROJECTILEINTERVAL = 15
-MAXNEURONSPERLAYER = 10
+MAXNEURONSPERLAYER = 15
 MAXDISPX = 1500  # 1024
 MAXDISPY = 1000  # 768
 MINRANDPARM = -10000
@@ -302,6 +302,19 @@ def breed(NN1, NN2, owner):
     return baby
 
 
+def mutate(NN):
+    return NN
+
+
+def setScore(NN):
+    pass
+
+def newGen():
+    pass
+
+
+
+
 # ------------- #
 #      main     #
 # ------------- #
@@ -324,7 +337,27 @@ entities = [bob, joe]
 
 testbaby = breed(NNlist1[0], NNlist2[0], 'bob')
 
+iteration = 0
+
+popindex = 0
+
 while True:
+    iteration += 1
+    if iteration >= MAXITERATIONS or entities[0].health == 0 or entities[1].health == 0:
+        iteration = 0
+        popindex += 1
+        print('Need to advance in Population')
+        nets = [NNlist1[popindex], NNlist2[popindex]]
+        entities[0].pos[0] = np.random.randint(1, MAXDISPX - 1)
+        entities[0].pos[1] = np.random.randint(1, MAXDISPY - 1)
+        entities[1].pos[0] = np.random.randint(1, MAXDISPX - 1)
+        entities[1].pos[1] = np.random.randint(1, MAXDISPY - 1)
+        # getsetscore()
+        # nextNN()
+        if popindex == 10:
+            print('all nets in population tested!')
+            popindex = 0
+            break
 
     DISPLAYSURF.fill(BLACK)
     # movement
@@ -372,9 +405,9 @@ while True:
             proj.updateProjectile()
 
             proj.draw()
-            # print(proj.pos)
-            # for entity in entities:
-            #    proj.collisionDetection(entity)
+            #print(proj.pos)
+            for entity in entities:
+               proj.collisionDetection(entity)
             #    temp = entity.inWedge(proj)
             #    if temp:
             #        counter += 1
@@ -382,10 +415,8 @@ while True:
             # print counter
             # print('checking: ' + entity.owner)
             # print(temp + '\'s projectile is in ' + entity.owner + '\'s FOV')
-
         # remove projectile from list if remove condition is met.
         projectiles[:] = [x for x in projectiles if removeCondition(x)]
-
         # entity handling
     #    entities[0].dir = entities[0].getCursorAngle()
     if entities:
@@ -395,7 +426,12 @@ while True:
             for players in entities:
                 if players != entity:
                     if (entity.inWedge(players)):
-                        print(entity.owner + ' detects ' + players.owner)
+                        #print(entity.owner + ' detects ' + players.owner)
+                        entity.detectEnemy = True
+                        #print(players.owner)
+                    else:
+                        entity.detectEnemy = False
+
 
             # create list of NNs for each entity
             nextmove = nets[entities.index(entity)].out(entity.state())
