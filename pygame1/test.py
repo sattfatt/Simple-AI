@@ -22,13 +22,13 @@ MOVEDOWN = 115
 # ------------- #
 #    params     #
 # ------------- #
-MAXITERATIONS = 1000
+MAXITERATIONS = 4000
 MAXHEALTH = 100
 MOVESPEED = 1
 PROJVEL = 3
 MAXSPINRATE = 1
 PROJECTILEINTERVAL = 15
-MAXNEURONSPERLAYER = 15
+MAXNEURONSPERLAYER = 25
 MAXDISPX = 1500  # 1024
 MAXDISPY = 1000  # 768
 MINRANDPARM = -10000
@@ -55,6 +55,8 @@ DISPLAYSURF = pygame.display.set_mode((MAXDISPX, MAXDISPY), 0, 32)
 DISPLAYRECT = pygame.Rect(0, 0, MAXDISPX, MAXDISPY)
 
 DISPLAYSURF.fill(BLACK)
+
+
 # ------------- #
 #   Classes     #
 # ------------- #
@@ -189,6 +191,9 @@ class Entity:
 
         return (self.pos[0], self.pos[1], self.dir, self.detectEnemy, self.health)
 
+    def reset(self):
+        self.health = MAXHEALTH
+
 
 class ControlFrame:
     def __init__(self, id):
@@ -309,10 +314,9 @@ def mutate(NN):
 def setScore(NN):
     pass
 
+
 def newGen():
     pass
-
-
 
 
 # ------------- #
@@ -326,7 +330,7 @@ NNlist1 = [NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN(
 NNlist2 = [NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe')]
 
 bob = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, RED, DISPLAYSURF, 'bob')
-joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, RED, DISPLAYSURF, 'joe')
+joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, GREEN, DISPLAYSURF, 'joe')
 
 # start with the first of 10 nets
 nets = [NNlist1[0], NNlist2[0]]
@@ -343,21 +347,34 @@ popindex = 0
 
 while True:
     iteration += 1
-    if iteration >= MAXITERATIONS or entities[0].health == 0 or entities[1].health == 0:
+
+    if iteration >= MAXITERATIONS or len(entities) < 2:
         iteration = 0
         popindex += 1
+        # set the score for the NNs
+        for net, idx in nets:
+            print('Scoring ' + net.id)
+            
+
         print('Need to advance in Population')
+        # reset bob and joe and and entities list
+        print('respawning...',)
+        joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, GREEN,
+                     DISPLAYSURF, 'joe')
+        bob = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, RED,
+                     DISPLAYSURF, 'bob')
+        entities = [bob, joe]
+        print('done')
+
         nets = [NNlist1[popindex], NNlist2[popindex]]
-        entities[0].pos[0] = np.random.randint(1, MAXDISPX - 1)
-        entities[0].pos[1] = np.random.randint(1, MAXDISPY - 1)
-        entities[1].pos[0] = np.random.randint(1, MAXDISPX - 1)
-        entities[1].pos[1] = np.random.randint(1, MAXDISPY - 1)
-        # getsetscore()
-        # nextNN()
-        if popindex == 10:
+        projectiles = []
+
+        if popindex == 9:
             print('all nets in population tested!')
             popindex = 0
             break
+
+
 
     DISPLAYSURF.fill(BLACK)
     # movement
@@ -405,16 +422,16 @@ while True:
             proj.updateProjectile()
 
             proj.draw()
-            #print(proj.pos)
+            # print(proj.pos)
             for entity in entities:
-               proj.collisionDetection(entity)
-            #    temp = entity.inWedge(proj)
-            #    if temp:
-            #        counter += 1
-            # ----DEBUG----#
-            # print counter
-            # print('checking: ' + entity.owner)
-            # print(temp + '\'s projectile is in ' + entity.owner + '\'s FOV')
+                proj.collisionDetection(entity)
+                #    temp = entity.inWedge(proj)
+                #    if temp:
+                #        counter += 1
+                # ----DEBUG----#
+                # print counter
+                # print('checking: ' + entity.owner)
+                # print(temp + '\'s projectile is in ' + entity.owner + '\'s FOV')
         # remove projectile from list if remove condition is met.
         projectiles[:] = [x for x in projectiles if removeCondition(x)]
         # entity handling
@@ -426,12 +443,11 @@ while True:
             for players in entities:
                 if players != entity:
                     if (entity.inWedge(players)):
-                        #print(entity.owner + ' detects ' + players.owner)
+                        # print(entity.owner + ' detects ' + players.owner)
                         entity.detectEnemy = True
-                        #print(players.owner)
+                        # print(players.owner)
                     else:
                         entity.detectEnemy = False
-
 
             # create list of NNs for each entity
             nextmove = nets[entities.index(entity)].out(entity.state())
