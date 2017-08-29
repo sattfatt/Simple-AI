@@ -65,6 +65,8 @@ DISPLAYSURF.fill(BLACK)
 class Entity:
     def __init__(self, pos, dir, size, color, surf, owner):
 
+        self.damagedealt = 0
+
         self.projectileint = 0
 
         self.clock = pygame.time.Clock()
@@ -166,6 +168,8 @@ class Entity:
             print(entity.owner + ' was hit by ' + self.owner + ' ' + str(
                 entity.collisioncount) + ' time(s).' + ' Health: ' + str(entity.health))
             self.hit = True
+        else:
+            self.hit = False
 
     def inWedge(self, projectile):
         '''returns  projectile owner in the FOV.
@@ -352,13 +356,15 @@ while True:
         iteration = 0
         popindex += 1
         # set the score for the NNs
-        for net, idx in nets:
-            print('Scoring ' + net.id)
-            
+        for idx, net in enumerate(nets):
+            print('Scoring ' + net.id + '...', end='')
+            # score function
+            net.score = entities[idx].damagedealt
+            print(net.score)
 
         print('Need to advance in Population')
         # reset bob and joe and and entities list
-        print('respawning...',)
+        print('respawning...', end='')
         joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, GREEN,
                      DISPLAYSURF, 'joe')
         bob = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, RED,
@@ -373,8 +379,6 @@ while True:
             print('all nets in population tested!')
             popindex = 0
             break
-
-
 
     DISPLAYSURF.fill(BLACK)
     # movement
@@ -409,8 +413,10 @@ while True:
             if event.key == K_SPACE:
                 angle = entities[0].getCursorAngle()
                 # print angle
-                projectiles.append(
-                    Entity((entities[0].pos[0], entities[0].pos[1]), angle, 5, WHITE, DISPLAYSURF, entities[0].owner))
+                # projectiles.append(
+                # Entity((entities[0].pos[0], entities[0].pos[1]), angle, 5, WHITE, DISPLAYSURF, entities[0].owner))
+                # projectiles.append(
+                # Entity((entities[1].pos[0], entities[1].pos[1]), angle, 5, WHITE, DISPLAYSURF, entities[1].owner))
             if event.key == K_l:
                 pass
 
@@ -425,15 +431,26 @@ while True:
             # print(proj.pos)
             for entity in entities:
                 proj.collisionDetection(entity)
-                #    temp = entity.inWedge(proj)
-                #    if temp:
-                #        counter += 1
-                # ----DEBUG----#
-                # print counter
-                # print('checking: ' + entity.owner)
-                # print(temp + '\'s projectile is in ' + entity.owner + '\'s FOV')
+                # print(projectiles)
+                if proj.hit:
+                    if proj.owner == 'bob':
+                        bob.damagedealt += 10
+                        # print('bob dealt ' + str(bob.damagedealt))
+                    elif proj.owner == 'joe':
+                        joe.damagedealt += 10
+                        # print('joe dealt ' + str(joe.damagedealt))
+                    projectiles[:] = [x for x in projectiles if removeCondition(
+                        x)]  # for some reason I have to remove the projectile right away in this scope if hit
+                    #    temp = entity.inWedge(proj)
+                    #    if temp:
+                    #        counter += 1
+                    # ----DEBUG----#
+                    # print counter
+                    # print('checking: ' + entity.owner)
+                    # print(temp + '\'s projectile is in ' + entity.owner + '\'s FOV')
         # remove projectile from list if remove condition is met.
         projectiles[:] = [x for x in projectiles if removeCondition(x)]
+
         # entity handling
     #    entities[0].dir = entities[0].getCursorAngle()
     if entities:
@@ -458,7 +475,7 @@ while True:
                 entity.projectileint = 0
                 projectiles.append(
                     Entity((entity.pos[0], entity.pos[1]), entity.dir, 5, WHITE, DISPLAYSURF, entity.owner))
-        entities[:] = [x for x in entities if not x.health == 0]
+    entities[:] = [x for x in entities if not x.health == 0]
 
     pygame.display.update()
     fpsClock.tick(FPS)
