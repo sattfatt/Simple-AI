@@ -259,6 +259,10 @@ class NN(ControlFrame):
         pass
 
 
+def getScore(NN):
+    return NN.score
+
+
 def breed(NN1, NN2, owner):
     '''Takes in two NN's and outputs a child with randomly chosen Neuron weight clusters from both'''
     baby = NN(owner)
@@ -312,6 +316,18 @@ def breed(NN1, NN2, owner):
 
 
 def mutate(NN):
+    """currently mutates all weight clusters (rows) using normal distribution centered at the clusters"""
+    # weights
+    for row in range(MAXNEURONSPERLAYER):
+        NN.w1[row, :] = np.random.multivariate_normal(NN.w1[row, :], np.identity(len(NN.w1[row, :])))
+        NN.w2[row, :] = np.random.multivariate_normal(NN.w2[row, :], np.identity(len(NN.w2[row, :])))
+    for row in range(5):
+        NN.w3[row, :] = np.random.multivariate_normal(NN.w3[row, :], np.identity(len(NN.w3[row, :])))
+    # biases
+    NN.b1 = np.random.multivariate_normal(NN.b1, np.identity(len(NN.b1)))
+    NN.b2 = np.random.multivariate_normal(NN.b2, np.identity(len(NN.b2)))
+    NN.b3 = np.random.multivariate_normal(NN.b3, np.identity(len(NN.b3)))
+
     return NN
 
 
@@ -319,8 +335,12 @@ def setScore(NN):
     pass
 
 
-def newGen():
-    pass
+def newGen(NNlist):
+    NNsort = sorted(NNlist, key=getScore, reverse=True)
+    children = []
+    for net in NNsort:
+        children.append(mutate(breed(NNsort[0], NNsort[1], NNsort[0].id)))
+    return children
 
 
 # ------------- #
@@ -349,17 +369,35 @@ iteration = 0
 
 popindex = 0
 
+generation = 0
+
 while True:
     iteration += 1
 
     if iteration >= MAXITERATIONS or len(entities) < 2:
         iteration = 0
         popindex += 1
+        if popindex == 10:
+            print('all nets in population tested!')
+            popindex = 0
+            print('Breeding new generation...', end='')
+            NNlist1 = newGen(NNlist1)
+            NNlist2 = newGen(NNlist2)
+            generation += 1
+            print('done!')
+            continue
+
+
+
         # set the score for the NNs
         for idx, net in enumerate(nets):
             print('Scoring ' + net.id + '...', end='')
             # score function
-            net.score = entities[idx].damagedealt
+            try:
+                net.score = entities[idx].damagedealt
+            except(IndexError):
+                # this means entity died, failure!
+                net.score = 0
             print(net.score)
 
         print('Need to advance in Population')
@@ -375,10 +413,7 @@ while True:
         nets = [NNlist1[popindex], NNlist2[popindex]]
         projectiles = []
 
-        if popindex == 9:
-            print('all nets in population tested!')
-            popindex = 0
-            break
+
 
     DISPLAYSURF.fill(BLACK)
     # movement
