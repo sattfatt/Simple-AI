@@ -6,6 +6,7 @@ import math
 
 # main
 pygame.init()
+pygame.font.init()
 pygame.display.set_caption('Animation')
 FPS = 240
 fpsClock = pygame.time.Clock()
@@ -371,12 +372,19 @@ popindex = 0
 
 generation = 0
 
+fontObj = pygame.font.Font(pygame.font.get_default_font(), 30)
+textSurf = fontObj.render('Generation: '+str(generation), True, WHITE)
+textRect = textSurf.get_rect()
+textRect.topleft = (10,10)
 while True:
+    DISPLAYSURF.fill(BLACK)
+    DISPLAYSURF.blit(textSurf,textRect)
     iteration += 1
 
     if iteration >= MAXITERATIONS or len(entities) < 2:
         iteration = 0
         popindex += 1
+
         if popindex == 10:
             print('all nets in population tested!')
             popindex = 0
@@ -384,10 +392,14 @@ while True:
             NNlist1 = newGen(NNlist1)
             NNlist2 = newGen(NNlist2)
             generation += 1
+            textSurf = fontObj.render('Generation: ' + str(generation), True, WHITE)
+            print('respawning entities...', end='')
+            joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, GREEN,
+                         DISPLAYSURF, 'joe')
+            bob = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, RED,
+                         DISPLAYSURF, 'bob')
             print('done!')
             continue
-
-
 
         # set the score for the NNs
         for idx, net in enumerate(nets):
@@ -396,8 +408,8 @@ while True:
             try:
                 net.score = entities[idx].damagedealt
             except(IndexError):
-                # this means entity died, failure!
-                net.score = 0
+                # this means entity died, failure!(set as negative in case of zero tie)
+                net.score = -1
             print(net.score)
 
         print('Need to advance in Population')
@@ -415,7 +427,7 @@ while True:
 
 
 
-    DISPLAYSURF.fill(BLACK)
+
     # movement
     keys = pygame.key.get_pressed()
     if keys[K_a]:
