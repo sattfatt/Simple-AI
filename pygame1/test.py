@@ -3,12 +3,13 @@ from pygame.locals import *
 from pygame import gfxdraw
 import numpy as np
 import math
+import random
 
 # main
 pygame.init()
 pygame.font.init()
 pygame.display.set_caption('Animation')
-FPS = 300
+FPS = 1000
 fpsClock = pygame.time.Clock()
 
 # ------------- #
@@ -24,17 +25,17 @@ MOVEDOWN = 115
 #    params     #
 # ------------- #
 MAXITERATIONS = 4000
-MAXHEALTH = 100
-MOVESPEED = 0.5
-PROJVEL = 4
-MAXSPINRATE = 0.5
+MAXHEALTH = 500
+MOVESPEED = 3
+PROJVEL = 10
+MAXSPINRATE = 1
 PROJECTILEINTERVAL = 100
 MAXNEURONSPERLAYER = 5
-MAXDISPX = 1500  # 1024
-MAXDISPY = 1000  # 768
+MAXDISPX = 1918  # 1024
+MAXDISPY = 1005  # 768
 MINRANDPARM = -1
 MAXRANDPARM = 1
-
+POPULATION = 100
 # ------------- #
 #     colors    #
 # ------------- #
@@ -67,6 +68,7 @@ class Entity:
     def __init__(self, pos, dir, size, color, surf, owner):
 
         self.endpointupper = (0,0)
+
         self.endpointlower = (0, 0)
 
         self.damagedealt = 0
@@ -155,8 +157,8 @@ class Entity:
         self.endpointlower = (self.wedgeMag * math.cos(-(pov / 2) + dir) + self.pos[0],
                               self.wedgeMag * math.sin(-(pov / 2) + dir) + self.pos[1])
         if display:
-            pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (self.endpointupper[0], self.endpointupper[1]), 1)
-            pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (self.endpointlower[0], self.endpointlower[1]), 1)
+            pygame.draw.aaline(DISPLAYSURF, WHITE, self.pos, (self.endpointupper[0], self.endpointupper[1]), 1)
+            pygame.draw.aaline(DISPLAYSURF, WHITE, self.pos, (self.endpointlower[0], self.endpointlower[1]), 1)
 
     def updateHitbox(self):
         self.hitbox = pygame.Rect(self.pos[0] - self.size, self.pos[1] - self.size, self.size * 2, self.size * 2)
@@ -247,6 +249,8 @@ class NN(ControlFrame):
         self.b3 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (5,)))
 
         self.score = 0
+
+        self.probability = 0
 
     def out(self, input):
         # output
@@ -353,19 +357,40 @@ def mutate(NN):
 def setScore(NN):
     pass
 
+
 def rouletteWheel(NNlist,n=1):
     totalfitness = 0
+    offset = 0
+    selected = []
     for i in range(len(NNlist)):
         totalfitness += NNlist[i].score
 
+    if totalfitness == 0:
+        totalfitness = 1
 
+    for brain in NNlist:
+        brain.probability = offset + brain.score / totalfitness
+        offset += brain.probability
+
+    selected = []
+    for i in range(n):
+        r = random.random()
+        selected.append(NNlist[0])
+        for brain in NNlist:
+            if brain.probability > r:
+                break
+            try:
+                selected[i] = brain
+            except IndexError:
+                selected.append(brain)
+    return selected
 
 
 def newGen(NNlist):
-    NNsort = sorted(NNlist, key=getScore, reverse=True)
     children = []
-    for net in NNsort:
-        children.append(mutate(breed(NNsort[0], NNsort[1], NNsort[0].id)))
+    fittest = rouletteWheel(NNlist, 2)
+    for net in NNlist:
+        children.append(mutate(breed(fittest[0], fittest[1], NNlist[0].id)))
     return children
 
 
@@ -375,12 +400,17 @@ def newGen(NNlist):
 
 # create 10 random NNs for each AI
 
-NNlist1 = [NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN('bob'), NN('bob')]
+NNlist1 = []
+NNlist2 = []
 
-NNlist2 = [NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe'), NN('joe')]
+for i in range(POPULATION):
+    NNlist1.append(NN('bob'))
+    NNlist2.append(NN('joe'))
+
+
 
 bob = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, RED, DISPLAYSURF, 'bob')
-joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, GREEN, DISPLAYSURF, 'joe')
+joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, CYAN, DISPLAYSURF, 'joe')
 
 # start with the first of 10 nets
 nets = [NNlist1[0], NNlist2[0]]
@@ -420,7 +450,7 @@ while True:
             generation += 1
 
             print('respawning entities...', end='')
-            joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, GREEN,
+            joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, CYAN,
                          DISPLAYSURF, 'joe')
             bob = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, RED,
                          DISPLAYSURF, 'bob')
@@ -436,14 +466,14 @@ while True:
             try:
                 net.score = entities[idx].damagedealt
             except(IndexError):
-                # this means entity died, failure!(set as negative in case of zero tie)
+                # this means entity died, failure!
                 net.score = 0
             print(net.score)
 
         print('Need to advance in Population')
         # reset bob and joe and and entities list
         print('respawning...', end='')
-        joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, GREEN,
+        joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, CYAN,
                      DISPLAYSURF, 'joe')
         bob = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, RED,
                      DISPLAYSURF, 'bob')
@@ -454,29 +484,6 @@ while True:
         projectiles = []
 
 
-
-
-    # movement
-    keys = pygame.key.get_pressed()
-    if keys[K_a]:
-        prevkey = MOVELEFT
-        # print('left event')
-        entities[0].updatePos(np.array([-MOVESPEED, 0]))
-    if keys[K_d]:
-        prevkey = MOVERIGHT
-        # print('right event')
-        entities[0].updatePos(np.array([MOVESPEED, 0]))
-    if keys[K_w]:
-        prevkey = MOVEUP
-        # print('up event')
-        entities[0].updatePos(np.array([0, -MOVESPEED]))
-    if keys[K_s]:
-        prevkey = MOVEDOWN
-        # print('down event')
-        entities[0].updatePos(np.array([0, MOVESPEED]))
-        # if keys[K_s] and keys[K_d]:
-        #   bob.updatePos(np.array([MOVESPEED, MOVESPEED]))
-
     # event handling
     for event in pygame.event.get():
 
@@ -484,16 +491,6 @@ while True:
             pygame.quit()
             sys.exit()
 
-        if event.type == KEYDOWN:
-            if event.key == K_SPACE:
-                angle = entities[0].getCursorAngle()
-                # print angle
-                # projectiles.append(
-                # Entity((entities[0].pos[0], entities[0].pos[1]), angle, 5, WHITE, DISPLAYSURF, entities[0].owner))
-                # projectiles.append(
-                # Entity((entities[1].pos[0], entities[1].pos[1]), angle, 5, WHITE, DISPLAYSURF, entities[1].owner))
-            if event.key == K_l:
-                pass
 
     # projectile handling
     if projectiles:
@@ -514,15 +511,7 @@ while True:
                     elif proj.owner == 'joe':
                         joe.damagedealt += 10
                         # print('joe dealt ' + str(joe.damagedealt))
-                    projectiles[:] = [x for x in projectiles if removeCondition(
-                        x)]  # for some reason I have to remove the projectile right away in this scope if hit
-                    #    temp = entity.inWedge(proj)
-                    #    if temp:
-                    #        counter += 1
-                    # ----DEBUG----#
-                    # print counter
-                    # print('checking: ' + entity.owner)
-                    # print(temp + '\'s projectile is in ' + entity.owner + '\'s FOV')
+                    projectiles[:] = [x for x in projectiles if removeCondition(x)]  # for some reason I have to remove the projectile right away in this scope if hit
         # remove projectile from list if remove condition is met.
         projectiles[:] = [x for x in projectiles if removeCondition(x)]
 
