@@ -8,7 +8,7 @@ import math
 pygame.init()
 pygame.font.init()
 pygame.display.set_caption('Animation')
-FPS = 240
+FPS = 300
 fpsClock = pygame.time.Clock()
 
 # ------------- #
@@ -25,15 +25,15 @@ MOVEDOWN = 115
 # ------------- #
 MAXITERATIONS = 4000
 MAXHEALTH = 100
-MOVESPEED = 1
-PROJVEL = 3
-MAXSPINRATE = 1
-PROJECTILEINTERVAL = 15
-MAXNEURONSPERLAYER = 25
+MOVESPEED = 0.5
+PROJVEL = 4
+MAXSPINRATE = 0.5
+PROJECTILEINTERVAL = 100
+MAXNEURONSPERLAYER = 5
 MAXDISPX = 1500  # 1024
 MAXDISPY = 1000  # 768
-MINRANDPARM = -10000
-MAXRANDPARM = 10000
+MINRANDPARM = -1
+MAXRANDPARM = 1
 
 # ------------- #
 #     colors    #
@@ -66,6 +66,9 @@ DISPLAYSURF.fill(BLACK)
 class Entity:
     def __init__(self, pos, dir, size, color, surf, owner):
 
+        self.endpointupper = (0,0)
+        self.endpointlower = (0, 0)
+
         self.damagedealt = 0
 
         self.projectileint = 0
@@ -86,7 +89,7 @@ class Entity:
 
         self.owner = owner
 
-        self.pov = 20
+        self.fov = 5
 
         self.pos = np.asarray(pos)
 
@@ -142,17 +145,18 @@ class Entity:
         # print heading
         return math.degrees(math.atan2(heading[1], heading[0]))
 
-    def drawWedge(self):
+    def iniWedge(self, display=True):
         # creates wedge with variable pov
-        pov = math.radians(self.pov)
+        pov = math.radians(self.fov)
         dir = math.radians(self.dir)
         # self.dir = self.getCursorAngle()
-        endpointupper = (self.wedgeMag * math.cos(pov / 2 + dir) + self.pos[0],
-                         self.wedgeMag * math.sin(pov / 2 + dir) + self.pos[1])
-        endpointlower = (self.wedgeMag * math.cos(-(pov / 2) + dir) + self.pos[0],
-                         self.wedgeMag * math.sin(-(pov / 2) + dir) + self.pos[1])
-        pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (endpointupper[0], endpointupper[1]), 1)
-        pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (endpointlower[0], endpointlower[1]), 1)
+        self.endpointupper = (self.wedgeMag * math.cos(pov / 2 + dir) + self.pos[0],
+                              self.wedgeMag * math.sin(pov / 2 + dir) + self.pos[1])
+        self.endpointlower = (self.wedgeMag * math.cos(-(pov / 2) + dir) + self.pos[0],
+                              self.wedgeMag * math.sin(-(pov / 2) + dir) + self.pos[1])
+        if display:
+            pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (self.endpointupper[0], self.endpointupper[1]), 1)
+            pygame.draw.aaline(DISPLAYSURF, CYAN, self.pos, (self.endpointlower[0], self.endpointlower[1]), 1)
 
     def updateHitbox(self):
         self.hitbox = pygame.Rect(self.pos[0] - self.size, self.pos[1] - self.size, self.size * 2, self.size * 2)
@@ -174,14 +178,28 @@ class Entity:
 
     def inWedge(self, projectile):
         '''returns  projectile owner in the FOV.
-        just check the argument of the projectile relative to the self'''
+        use triangle technique so we don't have to deal with unnormalized angles'''
 
-        relativepos = projectile.pos - self.pos
-        argument = math.atan2(relativepos[1], relativepos[0])
-        arg = math.degrees(argument) + (360 * math.floor(self.dir / 360))
-        # print(arg)
-        if (self.dir + self.pov / 2) >= arg >= (self.dir - self.pov / 2) and projectile.owner != self.owner:
+        # compute necessary vectors:
+        v0 = (self.endpointlower - self.pos)
+        v1 = (self.endpointupper - self.pos)
+        v2 = (projectile.pos - self.pos)
+
+        # calculate dot products
+        s00 = np.inner(v0, v0)
+        s01 = np.inner(v0, v1)
+        s02 = np.inner(v0, v2)
+        s11 = np.inner(v1, v1)
+        s12 = np.inner(v1, v2)
+
+        # calculate barycentric points
+        scalar = 1 / (s00*s11-s01*s01)
+        u = (s11*s02-s01*s12)*scalar
+        v = (s00*s12-s01*s02)*scalar
+
+        if u >= 0 and v >= 0 and self.owner != projectile.owner:
             self.detectEnemy = True
+            print(self.owner + ' detects enemy!')
             return True
         else:
             self.detectEnemy = False
@@ -221,12 +239,12 @@ class NN(ControlFrame):
     def __init__(self, owner):
         ControlFrame.__init__(self, owner)
         # initialize weights and biases with gaussian N(0,1) random values
-        self.w1 = np.array(np.random.randint(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER, 5)))
-        self.b1 = np.array(np.random.randint(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER,)))
-        self.w2 = np.array(np.random.randint(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER, MAXNEURONSPERLAYER)))
-        self.b2 = np.array(np.random.randint(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER,)))
-        self.w3 = np.array(np.random.randint(MINRANDPARM, MAXRANDPARM, (5, MAXNEURONSPERLAYER)))
-        self.b3 = np.array(np.random.randint(MINRANDPARM, MAXRANDPARM, (5,)))
+        self.w1 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER, 5)))
+        self.b1 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER,)))
+        self.w2 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER, MAXNEURONSPERLAYER)))
+        self.b2 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER,)))
+        self.w3 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (5, MAXNEURONSPERLAYER)))
+        self.b3 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (5,)))
 
         self.score = 0
 
@@ -335,6 +353,13 @@ def mutate(NN):
 def setScore(NN):
     pass
 
+def rouletteWheel(NNlist,n=1):
+    totalfitness = 0
+    for i in range(len(NNlist)):
+        totalfitness += NNlist[i].score
+
+
+
 
 def newGen(NNlist):
     NNsort = sorted(NNlist, key=getScore, reverse=True)
@@ -373,9 +398,10 @@ popindex = 0
 generation = 0
 
 fontObj = pygame.font.Font(pygame.font.get_default_font(), 30)
-textSurf = fontObj.render('Generation: '+str(generation), True, WHITE)
+textSurf = fontObj.render('Gen: '+str(generation)+' Pop: '+str(popindex), True, WHITE)
 textRect = textSurf.get_rect()
 textRect.topleft = (10,10)
+
 while True:
     DISPLAYSURF.fill(BLACK)
     DISPLAYSURF.blit(textSurf,textRect)
@@ -384,20 +410,22 @@ while True:
     if iteration >= MAXITERATIONS or len(entities) < 2:
         iteration = 0
         popindex += 1
-
-        if popindex == 10:
+        textSurf = fontObj.render('Gen: ' + str(generation) + ' Pop: ' + str(popindex), True, WHITE)
+        if popindex == len(NNlist1):
             print('all nets in population tested!')
             popindex = 0
             print('Breeding new generation...', end='')
             NNlist1 = newGen(NNlist1)
             NNlist2 = newGen(NNlist2)
             generation += 1
-            textSurf = fontObj.render('Generation: ' + str(generation), True, WHITE)
+
             print('respawning entities...', end='')
             joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, GREEN,
                          DISPLAYSURF, 'joe')
             bob = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, RED,
                          DISPLAYSURF, 'bob')
+            entities = [bob, joe]
+            projectiles = []
             print('done!')
             continue
 
@@ -409,7 +437,7 @@ while True:
                 net.score = entities[idx].damagedealt
             except(IndexError):
                 # this means entity died, failure!(set as negative in case of zero tie)
-                net.score = -1
+                net.score = 0
             print(net.score)
 
         print('Need to advance in Population')
@@ -503,15 +531,10 @@ while True:
     if entities:
         for entity in entities:
             entity.draw()
-            entity.drawWedge()
-            for players in entities:
-                if players != entity:
-                    if (entity.inWedge(players)):
-                        # print(entity.owner + ' detects ' + players.owner)
-                        entity.detectEnemy = True
-                        # print(players.owner)
-                    else:
-                        entity.detectEnemy = False
+            entity.iniWedge(True)
+
+            entity.inWedge(entities[0])
+            entity.inWedge(entities[1])
 
             # create list of NNs for each entity
             nextmove = nets[entities.index(entity)].out(entity.state())
