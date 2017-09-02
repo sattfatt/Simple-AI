@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8bc7fccf-e18c-4a48-9d92-81118058a059" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pygame1/tensorflow_tutorial.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pygame1/test.py" afterPath="$PROJECT_DIR$/pygame1/test.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/pygame1/test.py" afterPath="$PROJECT_DIR$/pygame1/oneonone.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -14,40 +15,57 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="test.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+      <file leaf-file-name="oneonone.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1219">
-              <caret line="37" column="16" lean-forward="true" selection-start-line="37" selection-start-column="16" selection-end-line="37" selection-end-column="16" />
+            <state relative-caret-position="152">
+              <caret line="31" column="24" lean-forward="false" selection-start-line="31" selection-start-column="24" selection-end-line="31" selection-end-column="24" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#1089#6069#0" expanded="false" />
-                <element signature="e#1154#2120#0" expanded="false" />
-                <element signature="e#2150#2532#0" expanded="false" />
-                <element signature="e#2574#2907#0" expanded="false" />
-                <element signature="e#2949#2983#0" expanded="false" />
-                <element signature="e#3023#3192#0" expanded="false" />
-                <element signature="e#3240#3980#0" expanded="false" />
-                <element signature="e#4018#4123#0" expanded="false" />
-                <element signature="e#4159#4211#0" expanded="false" />
-                <element signature="e#4263#4751#0" expanded="false" />
-                <element signature="e#4796#5683#0" expanded="false" />
-                <element signature="e#5730#5909#0" expanded="false" />
-                <element signature="e#5941#6015#0" expanded="false" />
-                <element signature="e#6046#6069#0" expanded="false" />
-                <element signature="e#6096#6233#0" expanded="false" />
-                <element signature="e#6269#6436#0" expanded="false" />
-                <element signature="e#6467#8216#0" expanded="false" />
-                <element signature="e#8241#8256#0" expanded="false" />
-                <element signature="e#8291#10211#0" expanded="false" />
-                <element signature="e#10234#10972#0" expanded="false" />
-                <element signature="e#11039#11676#0" expanded="false" />
+                <element signature="e#1313#2280#0" expanded="false" />
+                <element signature="e#2310#2697#0" expanded="false" />
+                <element signature="e#2739#3072#0" expanded="false" />
+                <element signature="e#3114#3148#0" expanded="false" />
+                <element signature="e#3188#3357#0" expanded="false" />
+                <element signature="e#3405#4164#0" expanded="false" />
+                <element signature="e#4202#4307#0" expanded="false" />
+                <element signature="e#4343#4395#0" expanded="false" />
+                <element signature="e#4447#4935#0" expanded="false" />
+                <element signature="e#4980#5891#0" expanded="false" />
+                <element signature="e#5938#6117#0" expanded="false" />
+                <element signature="e#6149#6223#0" expanded="false" />
+                <element signature="e#6254#6277#0" expanded="false" />
+                <element signature="e#6304#6441#0" expanded="false" />
+                <element signature="e#6477#6644#0" expanded="false" />
+                <element signature="e#6675#8424#0" expanded="false" />
+                <element signature="e#8449#8464#0" expanded="false" />
+                <element signature="e#8499#10419#0" expanded="false" />
+                <element signature="e#10442#11180#0" expanded="false" />
+                <element signature="e#11248#11885#0" expanded="false" />
+                <element signature="e#11912#12084#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="tensorflow_tutorial.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pygame1/tensorflow_tutorial.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="22" column="18" lean-forward="false" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="FindInProjectRecents">
     <replaceStrings>
@@ -62,14 +80,16 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/pygame1/test.py" />
+        <option value="$PROJECT_DIR$/pygame1/tensorflow_tutorial.py" />
+        <option value="$PROJECT_DIR$/pygame1/oneonone.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="-1367" />
-    <option name="y" value="72" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="248" />
+    <option name="y" value="248" />
     <option name="width" value="974" />
-    <option name="height" value="968" />
+    <option name="height" value="356" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -108,6 +128,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -121,7 +142,41 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.test">
+  <component name="RunManager" selected="Python.oneonone">
+    <configuration name="oneonone" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pygame1" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Simple-AI" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pygame1/oneonone.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
+    <configuration name="tensorflow_tutorial" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pygame1" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Simple-AI" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pygame1/tensorflow_tutorial.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
     <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -134,14 +189,21 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Simple-AI" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pygame1/test.py" />
+      <option name="SCRIPT_NAME" value="Z:\Pyprojects\Simple-AI\pygame1\oneonone.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
+    <list size="3">
+      <item index="0" class="java.lang.String" itemvalue="Python.test" />
+      <item index="1" class="java.lang.String" itemvalue="Python.tensorflow_tutorial" />
+      <item index="2" class="java.lang.String" itemvalue="Python.oneonone" />
+    </list>
     <recent_temporary>
-      <list size="1">
-        <item index="0" class="java.lang.String" itemvalue="Python.test" />
+      <list size="3">
+        <item index="0" class="java.lang.String" itemvalue="Python.oneonone" />
+        <item index="1" class="java.lang.String" itemvalue="Python.tensorflow_tutorial" />
+        <item index="2" class="java.lang.String" itemvalue="Python.test" />
       </list>
     </recent_temporary>
   </component>
@@ -159,13 +221,13 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1367" y="72" width="974" height="968" extended-state="0" />
+    <frame x="-8" y="32" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0836887" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.265625" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2652174" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -187,565 +249,783 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="8" />
+      <option name="time" value="9" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/tensorflow_tutorial.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="18" lean-forward="false" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/tensorflow_tutorial.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="18" lean-forward="false" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="527">
+          <caret line="31" column="24" lean-forward="false" selection-start-line="31" selection-start-column="24" selection-end-line="31" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pygame1/tensorflow_tutorial.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pygame1/test.py">
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1219">
-          <caret line="37" column="16" lean-forward="true" selection-start-line="37" selection-start-column="16" selection-end-line="37" selection-end-column="16" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#1089#6069#0" expanded="false" />
-            <element signature="e#1154#2120#0" expanded="false" />
-            <element signature="e#2150#2532#0" expanded="false" />
-            <element signature="e#2574#2907#0" expanded="false" />
-            <element signature="e#2949#2983#0" expanded="false" />
-            <element signature="e#3023#3192#0" expanded="false" />
-            <element signature="e#3240#3980#0" expanded="false" />
-            <element signature="e#4018#4123#0" expanded="false" />
-            <element signature="e#4159#4211#0" expanded="false" />
-            <element signature="e#4263#4751#0" expanded="false" />
-            <element signature="e#4796#5683#0" expanded="false" />
-            <element signature="e#5730#5909#0" expanded="false" />
-            <element signature="e#5941#6015#0" expanded="false" />
-            <element signature="e#6046#6069#0" expanded="false" />
-            <element signature="e#6096#6233#0" expanded="false" />
-            <element signature="e#6269#6436#0" expanded="false" />
-            <element signature="e#6467#8216#0" expanded="false" />
-            <element signature="e#8241#8256#0" expanded="false" />
-            <element signature="e#8291#10211#0" expanded="false" />
-            <element signature="e#10234#10972#0" expanded="false" />
-            <element signature="e#11039#11676#0" expanded="false" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pygame1/tensorflow_tutorial.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="18" lean-forward="false" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pygame1/oneonone.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="31" column="24" lean-forward="false" selection-start-line="31" selection-start-column="24" selection-end-line="31" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#1313#2280#0" expanded="false" />
+            <element signature="e#2310#2697#0" expanded="false" />
+            <element signature="e#2739#3072#0" expanded="false" />
+            <element signature="e#3114#3148#0" expanded="false" />
+            <element signature="e#3188#3357#0" expanded="false" />
+            <element signature="e#3405#4164#0" expanded="false" />
+            <element signature="e#4202#4307#0" expanded="false" />
+            <element signature="e#4343#4395#0" expanded="false" />
+            <element signature="e#4447#4935#0" expanded="false" />
+            <element signature="e#4980#5891#0" expanded="false" />
+            <element signature="e#5938#6117#0" expanded="false" />
+            <element signature="e#6149#6223#0" expanded="false" />
+            <element signature="e#6254#6277#0" expanded="false" />
+            <element signature="e#6304#6441#0" expanded="false" />
+            <element signature="e#6477#6644#0" expanded="false" />
+            <element signature="e#6675#8424#0" expanded="false" />
+            <element signature="e#8449#8464#0" expanded="false" />
+            <element signature="e#8499#10419#0" expanded="false" />
+            <element signature="e#10442#11180#0" expanded="false" />
+            <element signature="e#11248#11885#0" expanded="false" />
+            <element signature="e#11912#12084#0" expanded="false" />
           </folding>
         </state>
       </provider>

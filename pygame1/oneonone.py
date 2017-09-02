@@ -24,18 +24,36 @@ MOVEDOWN = 115
 # ------------- #
 #    params     #
 # ------------- #
-MAXITERATIONS = 4000
-MAXHEALTH = 500
-MOVESPEED = 3
-PROJVEL = 10
+MAXITERATIONS = 10000
+MAXHEALTH = 1000
+MOVESPEED = 1
+PROJVEL = 3
 MAXSPINRATE = 1
-PROJECTILEINTERVAL = 100
+PROJECTILEINTERVAL = 500
 MAXNEURONSPERLAYER = 5
 MAXDISPX = 1918  # 1024
 MAXDISPY = 1005  # 768
 MINRANDPARM = -1
 MAXRANDPARM = 1
-POPULATION = 100
+POPULATION = 20
+
+# ------------- #
+#    Globals    #
+# ------------- #
+
+iteration = 0
+
+tick = 0
+
+popindex = 0
+
+generation = 0
+
+displayupdateinterval = 10
+
+runnormal = False
+
+
 # ------------- #
 #     colors    #
 # ------------- #
@@ -67,7 +85,7 @@ DISPLAYSURF.fill(BLACK)
 class Entity:
     def __init__(self, pos, dir, size, color, surf, owner):
 
-        self.endpointupper = (0,0)
+        self.endpointupper = (0, 0)
 
         self.endpointlower = (0, 0)
 
@@ -119,11 +137,11 @@ class Entity:
         self.drawhitboxflag = False
 
     def draw(self):
-        pygame.gfxdraw.filled_circle(self.SURFACE,
-                                     np.round(self.pos[0]).astype(int),
-                                     np.round(self.pos[1]).astype(int),
-                                     self.size,
-                                     self.color)
+        #pygame.gfxdraw.filled_circle(self.SURFACE,
+                                     #np.round(self.pos[0]).astype(int),
+                                     #np.round(self.pos[1]).astype(int),
+                                     #self.size,
+                                     #self.color)
 
         self.updateHitbox()
         if self.drawhitboxflag == True:
@@ -157,8 +175,9 @@ class Entity:
         self.endpointlower = (self.wedgeMag * math.cos(-(pov / 2) + dir) + self.pos[0],
                               self.wedgeMag * math.sin(-(pov / 2) + dir) + self.pos[1])
         if display:
-            pygame.draw.aaline(DISPLAYSURF, WHITE, self.pos, (self.endpointupper[0], self.endpointupper[1]), 1)
-            pygame.draw.aaline(DISPLAYSURF, WHITE, self.pos, (self.endpointlower[0], self.endpointlower[1]), 1)
+            pass
+            #pygame.draw.aaline(DISPLAYSURF, WHITE, self.pos, (self.endpointupper[0], self.endpointupper[1]), 1)
+            #pygame.draw.aaline(DISPLAYSURF, WHITE, self.pos, (self.endpointlower[0], self.endpointlower[1]), 1)
 
     def updateHitbox(self):
         self.hitbox = pygame.Rect(self.pos[0] - self.size, self.pos[1] - self.size, self.size * 2, self.size * 2)
@@ -195,13 +214,13 @@ class Entity:
         s12 = np.inner(v1, v2)
 
         # calculate barycentric points
-        scalar = 1 / (s00*s11-s01*s01)
-        u = (s11*s02-s01*s12)*scalar
-        v = (s00*s12-s01*s02)*scalar
+        scalar = 1 / (s00 * s11 - s01 * s01)
+        u = (s11 * s02 - s01 * s12) * scalar
+        v = (s00 * s12 - s01 * s02) * scalar
 
         if u >= 0 and v >= 0 and self.owner != projectile.owner:
             self.detectEnemy = True
-            print(self.owner + ' detects enemy!')
+            # print(self.owner + ' detects enemy!')
             return True
         else:
             self.detectEnemy = False
@@ -358,7 +377,7 @@ def setScore(NN):
     pass
 
 
-def rouletteWheel(NNlist,n=1):
+def rouletteWheel(NNlist, n=1):
     totalfitness = 0
     offset = 0
     selected = []
@@ -407,8 +426,6 @@ for i in range(POPULATION):
     NNlist1.append(NN('bob'))
     NNlist2.append(NN('joe'))
 
-
-
 bob = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, RED, DISPLAYSURF, 'bob')
 joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, CYAN, DISPLAYSURF, 'joe')
 
@@ -421,20 +438,17 @@ entities = [bob, joe]
 
 testbaby = breed(NNlist1[0], NNlist2[0], 'bob')
 
-iteration = 0
-
-popindex = 0
-
-generation = 0
+keys = []
 
 fontObj = pygame.font.Font(pygame.font.get_default_font(), 30)
-textSurf = fontObj.render('Gen: '+str(generation)+' Pop: '+str(popindex), True, WHITE)
+textSurf = fontObj.render('Gen: ' + str(generation) + ' Pop: ' + str(popindex), True, WHITE)
 textRect = textSurf.get_rect()
-textRect.topleft = (10,10)
+textRect.topleft = (10, 10)
 
 while True:
-    DISPLAYSURF.fill(BLACK)
-    DISPLAYSURF.blit(textSurf,textRect)
+    #DISPLAYSURF.fill(BLACK)
+
+
     iteration += 1
 
     if iteration >= MAXITERATIONS or len(entities) < 2:
@@ -456,6 +470,7 @@ while True:
                          DISPLAYSURF, 'bob')
             entities = [bob, joe]
             projectiles = []
+            textSurf = fontObj.render('Gen: ' + str(generation) + ' Pop: ' + str(popindex), True, WHITE)
             print('done!')
             continue
 
@@ -483,6 +498,7 @@ while True:
         nets = [NNlist1[popindex], NNlist2[popindex]]
         projectiles = []
 
+    # keys
 
     # event handling
     for event in pygame.event.get():
@@ -490,7 +506,13 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-
+        if event.type == KEYDOWN:
+            if event.key == K_m:
+                runnormal = False
+                DISPLAYSURF.fill(BLACK)
+                pygame.display.update()
+            if event.key == K_n:
+                runnormal = True
 
     # projectile handling
     if projectiles:
@@ -511,7 +533,8 @@ while True:
                     elif proj.owner == 'joe':
                         joe.damagedealt += 10
                         # print('joe dealt ' + str(joe.damagedealt))
-                    projectiles[:] = [x for x in projectiles if removeCondition(x)]  # for some reason I have to remove the projectile right away in this scope if hit
+                    projectiles[:] = [x for x in projectiles if removeCondition(
+                        x)]  # for some reason I have to remove the projectile right away in this scope if hit
         # remove projectile from list if remove condition is met.
         projectiles[:] = [x for x in projectiles if removeCondition(x)]
 
@@ -536,5 +559,37 @@ while True:
                     Entity((entity.pos[0], entity.pos[1]), entity.dir, 5, WHITE, DISPLAYSURF, entity.owner))
     entities[:] = [x for x in entities if not x.health == 0]
 
-    pygame.display.update()
-    fpsClock.tick(FPS)
+    if runnormal:
+        # draw all things here.
+        tick += 1
+
+        if tick >= displayupdateinterval:
+
+            for projectile in projectiles:
+                pygame.gfxdraw.filled_circle(projectile.SURFACE,
+                                             np.round(projectile.pos[0]).astype(int),
+                                             np.round(projectile.pos[1]).astype(int),
+                                             projectile.size,
+                                             projectile.color)
+            for entity in entities:
+                pygame.draw.aaline(DISPLAYSURF, WHITE, entity.pos, (entity.endpointupper[0], entity.endpointupper[1]),
+                                   1)
+                pygame.draw.aaline(DISPLAYSURF, WHITE, entity.pos, (entity.endpointlower[0], entity.endpointlower[1]),
+                                   1)
+                pygame.gfxdraw.filled_circle(entity.SURFACE,
+                                             np.round(entity.pos[0]).astype(int),
+                                             np.round(entity.pos[1]).astype(int),
+                                             entity.size,
+                                             entity.color)
+
+
+            pygame.display.update()
+            DISPLAYSURF.fill(BLACK)
+            DISPLAYSURF.blit(textSurf,textRect)
+            tick = 0
+
+    #pygame.display.update()
+    #pygame.display.update([entities[0].hitbox, entities[1].hitbox])
+
+
+    #print(fpsClock.tick(0))
