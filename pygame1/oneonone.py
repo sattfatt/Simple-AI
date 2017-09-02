@@ -35,7 +35,7 @@ MAXDISPX = 1918  # 1024
 MAXDISPY = 1005  # 768
 MINRANDPARM = -1
 MAXRANDPARM = 1
-POPULATION = 20
+POPULATION = 100
 
 # ------------- #
 #    Globals    #
@@ -52,7 +52,6 @@ generation = 0
 displayupdateinterval = 10
 
 runnormal = False
-
 
 # ------------- #
 #     colors    #
@@ -137,11 +136,11 @@ class Entity:
         self.drawhitboxflag = False
 
     def draw(self):
-        #pygame.gfxdraw.filled_circle(self.SURFACE,
-                                     #np.round(self.pos[0]).astype(int),
-                                     #np.round(self.pos[1]).astype(int),
-                                     #self.size,
-                                     #self.color)
+        # pygame.gfxdraw.filled_circle(self.SURFACE,
+        # np.round(self.pos[0]).astype(int),
+        # np.round(self.pos[1]).astype(int),
+        # self.size,
+        # self.color)
 
         self.updateHitbox()
         if self.drawhitboxflag == True:
@@ -176,8 +175,8 @@ class Entity:
                               self.wedgeMag * math.sin(-(pov / 2) + dir) + self.pos[1])
         if display:
             pass
-            #pygame.draw.aaline(DISPLAYSURF, WHITE, self.pos, (self.endpointupper[0], self.endpointupper[1]), 1)
-            #pygame.draw.aaline(DISPLAYSURF, WHITE, self.pos, (self.endpointlower[0], self.endpointlower[1]), 1)
+            # pygame.draw.aaline(DISPLAYSURF, WHITE, self.pos, (self.endpointupper[0], self.endpointupper[1]), 1)
+            # pygame.draw.aaline(DISPLAYSURF, WHITE, self.pos, (self.endpointlower[0], self.endpointlower[1]), 1)
 
     def updateHitbox(self):
         self.hitbox = pygame.Rect(self.pos[0] - self.size, self.pos[1] - self.size, self.size * 2, self.size * 2)
@@ -359,16 +358,22 @@ def breed(NN1, NN2, owner):
 
 def mutate(NN):
     """currently mutates all weight clusters (rows) using normal distribution centered at the clusters"""
+    choice = np.random.binomial(1, 0.05)
+    if choice:
+        multiplier = 100
+        print('BIG MUTATION PROBABLE!')
+    else:
+        multiplier = 0
     # weights
     for row in range(MAXNEURONSPERLAYER):
-        NN.w1[row, :] = np.random.multivariate_normal(NN.w1[row, :], np.identity(len(NN.w1[row, :])))
-        NN.w2[row, :] = np.random.multivariate_normal(NN.w2[row, :], np.identity(len(NN.w2[row, :])))
+        NN.w1[row, :] = np.random.multivariate_normal(NN.w1[row, :], np.identity(len(NN.w1[row, :]))*multiplier)
+        NN.w2[row, :] = np.random.multivariate_normal(NN.w2[row, :], np.identity(len(NN.w2[row, :]))*multiplier)
     for row in range(5):
-        NN.w3[row, :] = np.random.multivariate_normal(NN.w3[row, :], np.identity(len(NN.w3[row, :])))
+        NN.w3[row, :] = np.random.multivariate_normal(NN.w3[row, :], np.identity(len(NN.w3[row, :]))*multiplier)
     # biases
-    NN.b1 = np.random.multivariate_normal(NN.b1, np.identity(len(NN.b1)))
-    NN.b2 = np.random.multivariate_normal(NN.b2, np.identity(len(NN.b2)))
-    NN.b3 = np.random.multivariate_normal(NN.b3, np.identity(len(NN.b3)))
+    NN.b1 = np.random.multivariate_normal(NN.b1, np.identity(len(NN.b1))*multiplier)
+    NN.b2 = np.random.multivariate_normal(NN.b2, np.identity(len(NN.b2))*multiplier)
+    NN.b3 = np.random.multivariate_normal(NN.b3, np.identity(len(NN.b3))*multiplier)
 
     return NN
 
@@ -407,9 +412,28 @@ def rouletteWheel(NNlist, n=1):
 
 def newGen(NNlist):
     children = []
-    fittest = rouletteWheel(NNlist, 2)
-    for net in NNlist:
+    # sort the list of nets
+    sortlist = sorted(NNlist, key=getScore, reverse=True)
+
+    # pass on the top ciel(1/5*POPULATION) results
+    m = len(NNlist)
+
+    n = math.ceil(1/5*POPULATION)
+
+    for i in range(int(n)):
+        children.append(sortlist[i])
+    print(str(n) + ' top results selected')
+
+    # pass on children of top two fittest
+    children.append(mutate(breed(sortlist[0], sortlist[1], NNlist[0].id)))
+    children.append(mutate(breed(sortlist[0], sortlist[1], NNlist[0].id)))
+    print('top two results bred twice')
+    # pass on children of m - n - 2 roulette chosen pairs
+
+    for net in range(int(m-n-2)):
+        fittest = rouletteWheel(NNlist, 2)
         children.append(mutate(breed(fittest[0], fittest[1], NNlist[0].id)))
+    print('total number of children: ' + str(len(children)))
     return children
 
 
@@ -446,7 +470,7 @@ textRect = textSurf.get_rect()
 textRect.topleft = (10, 10)
 
 while True:
-    #DISPLAYSURF.fill(BLACK)
+    # DISPLAYSURF.fill(BLACK)
 
 
     iteration += 1
@@ -494,6 +518,7 @@ while True:
                      DISPLAYSURF, 'bob')
         entities = [bob, joe]
         print('done')
+        print('generation: '+str(generation))
 
         nets = [NNlist1[popindex], NNlist2[popindex]]
         projectiles = []
@@ -582,14 +607,13 @@ while True:
                                              entity.size,
                                              entity.color)
 
-
             pygame.display.update()
             DISPLAYSURF.fill(BLACK)
-            DISPLAYSURF.blit(textSurf,textRect)
+            DISPLAYSURF.blit(textSurf, textRect)
             tick = 0
 
-    #pygame.display.update()
-    #pygame.display.update([entities[0].hitbox, entities[1].hitbox])
+            # pygame.display.update()
+            # pygame.display.update([entities[0].hitbox, entities[1].hitbox])
 
 
-    #print(fpsClock.tick(0))
+            # print(fpsClock.tick(0))
