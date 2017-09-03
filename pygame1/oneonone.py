@@ -30,12 +30,12 @@ MOVESPEED = 1
 PROJVEL = 3
 MAXSPINRATE = 1
 PROJECTILEINTERVAL = 500
-MAXNEURONSPERLAYER = 5
+MAXNEURONSPERLAYER = 6
 MAXDISPX = 1918  # 1024
 MAXDISPY = 1005  # 768
 MINRANDPARM = -1
 MAXRANDPARM = 1
-POPULATION = 100
+POPULATION = 10
 
 # ------------- #
 #    Globals    #
@@ -218,21 +218,28 @@ class Entity:
         v = (s00 * s12 - s01 * s02) * scalar
 
         if u >= 0 and v >= 0 and self.owner != projectile.owner:
-            self.detectEnemy = True
-            # print(self.owner + ' detects enemy!')
+            self.detectEnemy = 100
+            #print(self.owner + ' detects enemy!')
             return True
         else:
-            self.detectEnemy = False
+            self.detectEnemy = 0
             return False
 
     def control(self, controlframe):
         ''' Based on the control frame input, the entity will be moved and/or rotated '''
         self.updatePos(controlframe.deltaDirection)
         self.dir += controlframe.deltaHeading
+        # normalize angle from -180 < angle <= 180
+        self.dir = self.dir % 360
+        self.dir = (self.dir + 360) % 360
+        if self.dir > 180:
+            self.dir -= 360
+
 
     def state(self):
 
-        return (self.pos[0], self.pos[1], self.dir, self.detectEnemy, self.health)
+
+        return (self.detectEnemy, self.health)
 
     def reset(self):
         self.health = MAXHEALTH
@@ -244,6 +251,7 @@ class ControlFrame:
         self.deltaDirection = (0, 0)
         self.fire = False
         self.id = id
+        self.pov = 10
 
 
 def removeCondition(entity):
@@ -259,7 +267,7 @@ class NN(ControlFrame):
     def __init__(self, owner):
         ControlFrame.__init__(self, owner)
         # initialize weights and biases with gaussian N(0,1) random values
-        self.w1 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER, 5)))
+        self.w1 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER, 2)))
         self.b1 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER,)))
         self.w2 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER, MAXNEURONSPERLAYER)))
         self.b2 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER,)))
@@ -288,11 +296,13 @@ class NN(ControlFrame):
         finalLayerOut = (np.tanh(preIndicator[0]),
                          np.tanh(preIndicator[1]),
                          np.tanh(preIndicator[2]),
-                         np.piecewise(preIndicator[3], [preIndicator[3] < 0, preIndicator[3] >= 0], [0, 1]))
+                         np.piecewise(preIndicator[3], [preIndicator[3] < 0, preIndicator[3] >= 0], [0, 1]),
+                         np.tanh(preIndicator[4]))
 
         ControlFrame.deltaDirection = (finalLayerOut[0], finalLayerOut[1])
         ControlFrame.deltaHeading = finalLayerOut[2] * MAXSPINRATE
         ControlFrame.fire = finalLayerOut[3]
+        ControlFrame.pov = (finalLayerOut[4] + 1)*30 + 1
 
         return ControlFrame
 
@@ -311,59 +321,65 @@ def breed(NN1, NN2, owner):
     for row in range(MAXNEURONSPERLAYER):
         choice = np.random.binomial(1, 0.5)
         if choice:
-            baby.w1[row, :] = NN1.w1[np.random.randint(0, MAXNEURONSPERLAYER), :]
+            baby.w1[row, :] = NN1.w1[row, :]
             # yes may get same weights for multiple neurons....
         else:
-            baby.w1[row, :] = NN2.w1[np.random.randint(0, MAXNEURONSPERLAYER), :]
+            baby.w1[row, :] = NN2.w1[row, :]
 
     for row in range(MAXNEURONSPERLAYER):
         choice = np.random.binomial(1, 0.5)
         if choice:
-            baby.w2[row, :] = NN1.w2[np.random.randint(0, MAXNEURONSPERLAYER), :]
+            baby.w2[row, :] = NN1.w2[row, :]
             # yes may get same weights for multiple neurons....
         else:
-            baby.w2[row, :] = NN2.w2[np.random.randint(0, MAXNEURONSPERLAYER), :]
+            baby.w2[row, :] = NN2.w2[row, :]
 
     for row in range(5):
         choice = np.random.binomial(1, 0.5)
         if choice:
-            baby.w3[row, :] = NN1.w3[np.random.randint(0, 5), :]
+            baby.w3[row, :] = NN1.w3[row, :]
             # yes may get same weights for multiple neurons....
         else:
-            baby.w3[row, :] = NN2.w3[np.random.randint(0, 5), :]
+            baby.w3[row, :] = NN2.w3[row, :]
 
     for weight in range(MAXNEURONSPERLAYER):
         choice = np.random.binomial(1, 0.5)
         if choice:
-            baby.b1[weight] = NN1.b1[np.random.randint(0, MAXNEURONSPERLAYER)]
+            baby.b1[weight] = NN1.b1[weight]
         else:
-            baby.b1[weight] = NN2.b1[np.random.randint(0, MAXNEURONSPERLAYER)]
+            baby.b1[weight] = NN2.b1[weight]
 
     for weight in range(MAXNEURONSPERLAYER):
         choice = np.random.binomial(1, 0.5)
         if choice:
-            baby.b2[weight] = NN1.b2[np.random.randint(0, MAXNEURONSPERLAYER)]
+            baby.b2[weight] = NN1.b2[weight]
         else:
-            baby.b2[weight] = NN2.b2[np.random.randint(0, MAXNEURONSPERLAYER)]
+            baby.b2[weight] = NN2.b2[weight]
 
     for weight in range(5):
         choice = np.random.binomial(1, 0.5)
         if choice:
-            baby.b3[weight] = NN1.b3[np.random.randint(0, 5)]
+            baby.b3[weight] = NN1.b3[weight]
         else:
-            baby.b3[weight] = NN2.b3[np.random.randint(0, 5)]
+            baby.b3[weight] = NN2.b3[weight]
 
     return baby
 
 
 def mutate(NN):
     """currently mutates all weight clusters (rows) using normal distribution centered at the clusters"""
-    choice = np.random.binomial(1, 0.05)
+    choice = np.random.binomial(1, 0.1)
     if choice:
         multiplier = 100
         print('BIG MUTATION PROBABLE!')
     else:
-        multiplier = 0
+
+        choice2 = np.random.binomial(1, 0.5)
+        if choice2:
+            multiplier = 5
+        else:
+            multiplier = 0.0001
+
     # weights
     for row in range(MAXNEURONSPERLAYER):
         NN.w1[row, :] = np.random.multivariate_normal(NN.w1[row, :], np.identity(len(NN.w1[row, :]))*multiplier)
@@ -380,7 +396,6 @@ def mutate(NN):
 
 def setScore(NN):
     pass
-
 
 def rouletteWheel(NNlist, n=1):
     totalfitness = 0
@@ -503,7 +518,7 @@ while True:
             print('Scoring ' + net.id + '...', end='')
             # score function
             try:
-                net.score = entities[idx].damagedealt
+                net.score = entities[idx].damagedealt + entities[idx].health
             except(IndexError):
                 # this means entity died, failure!
                 net.score = 0
@@ -519,6 +534,7 @@ while True:
         entities = [bob, joe]
         print('done')
         print('generation: '+str(generation))
+        print('POPULATION: ' + str(popindex))
 
         nets = [NNlist1[popindex], NNlist2[popindex]]
         projectiles = []
@@ -566,7 +582,7 @@ while True:
         # entity handling
     #    entities[0].dir = entities[0].getCursorAngle()
     if entities:
-        for entity in entities:
+        for idx, entity in enumerate(entities):
             entity.draw()
             entity.iniWedge(True)
 
@@ -574,9 +590,10 @@ while True:
             entity.inWedge(entities[1])
 
             # create list of NNs for each entity
-            nextmove = nets[entities.index(entity)].out(entity.state())
+            nextmove = nets[idx].out(entity.state())
             # print(str(nextmove.deltaDirection) + " " + str(nextmove.deltaHeading) + " " + str(nextmove.fire))
             entity.control(nextmove)
+            entity.fov = nextmove.pov
             entity.projectileint += 1
             if nextmove.fire and entity.projectileint >= PROJECTILEINTERVAL:
                 entity.projectileint = 0
@@ -612,8 +629,3 @@ while True:
             DISPLAYSURF.blit(textSurf, textRect)
             tick = 0
 
-            # pygame.display.update()
-            # pygame.display.update([entities[0].hitbox, entities[1].hitbox])
-
-
-            # print(fpsClock.tick(0))
