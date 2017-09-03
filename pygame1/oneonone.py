@@ -53,6 +53,8 @@ displayupdateinterval = 10
 
 runnormal = False
 
+keystate = 0
+
 # ------------- #
 #     colors    #
 # ------------- #
@@ -82,13 +84,16 @@ DISPLAYSURF.fill(BLACK)
 
 
 class Entity:
-    def __init__(self, pos, dir, size, color, surf, owner):
+    def __init__(self, pos, dir, size, color, surf, owner, type='entity'):
+        self.type = type
 
         self.endpointupper = (0, 0)
 
         self.endpointlower = (0, 0)
 
         self.damagedealt = 0
+
+        self.totaldamage = 0
 
         self.projectileint = 0
 
@@ -112,7 +117,9 @@ class Entity:
 
         self.pos = np.asarray(pos)
 
-        self.detectEnemy = False
+        self.detectEnemy = 0
+
+        self.detectProjectile = 0
 
         self.truepos = self.pos.astype(float)
 
@@ -196,14 +203,16 @@ class Entity:
         else:
             self.hit = False
 
-    def inWedge(self, projectile):
-        '''returns  projectile owner in the FOV.
-        use triangle technique so we don't have to deal with unnormalized angles'''
+    def inWedge(self, entity):
+        '''returns true if projectile or entity is detected. sets whether entity or projectile is detected.
+        use triangle technique so we don't have to deal with unnormalized angles
+        basically project the relative position vector onto the pov vectors and see if the projection is
+        strictly positive in magnitude'''
 
         # compute necessary vectors:
         v0 = (self.endpointlower - self.pos)
         v1 = (self.endpointupper - self.pos)
-        v2 = (projectile.pos - self.pos)
+        v2 = (entity.pos - self.pos)
 
         # calculate dot products
         s00 = np.inner(v0, v0)
@@ -217,12 +226,16 @@ class Entity:
         u = (s11 * s02 - s01 * s12) * scalar
         v = (s00 * s12 - s01 * s02) * scalar
 
-        if u >= 0 and v >= 0 and self.owner != projectile.owner:
-            self.detectEnemy = 100
-            #print(self.owner + ' detects enemy!')
+        if u >= 0 and v >= 0 and self.owner != entity.owner:
+            if entity.type == 'entity':
+                self.detectEnemy = 1
+            elif entity.type == 'projectile':
+                self.detectProjectile = 1
+                #print(self.owner + ' detects projectile!')
             return True
         else:
             self.detectEnemy = 0
+            self.detectProjectile = 0
             return False
 
     def control(self, controlframe):
@@ -235,11 +248,8 @@ class Entity:
         if self.dir > 180:
             self.dir -= 360
 
-
     def state(self):
-
-
-        return (self.detectEnemy, self.health)
+        return self.detectEnemy, self.detectProjectile
 
     def reset(self):
         self.health = MAXHEALTH
@@ -299,12 +309,16 @@ class NN(ControlFrame):
                          np.piecewise(preIndicator[3], [preIndicator[3] < 0, preIndicator[3] >= 0], [0, 1]),
                          np.tanh(preIndicator[4]))
 
-        ControlFrame.deltaDirection = (finalLayerOut[0], finalLayerOut[1])
-        ControlFrame.deltaHeading = finalLayerOut[2] * MAXSPINRATE
-        ControlFrame.fire = finalLayerOut[3]
-        ControlFrame.pov = (finalLayerOut[4] + 1)*30 + 1
+        self.deltaDirection = (finalLayerOut[0], finalLayerOut[1])
+        self.deltaHeading = finalLayerOut[2] * MAXSPINRATE
+        self.fire = finalLayerOut[3]
+        self.pov += finalLayerOut[4]
+        if self.pov >= 50:
+            self.pov = 50
+        elif self.pov <= 1:
+            self.pov = 1
 
-        return ControlFrame
+        return self
 
     def updateWeights(self):
         pass
@@ -368,15 +382,15 @@ def breed(NN1, NN2, owner):
 
 def mutate(NN):
     """currently mutates all weight clusters (rows) using normal distribution centered at the clusters"""
-    choice = np.random.binomial(1, 0.1)
+    choice = np.random.binomial(1, 0.01)
     if choice:
         multiplier = 100
         print('BIG MUTATION PROBABLE!')
     else:
 
-        choice2 = np.random.binomial(1, 0.5)
+        choice2 = np.random.binomial(1, 0.05)
         if choice2:
-            multiplier = 5
+            multiplier = 1
         else:
             multiplier = 0.0001
 
@@ -491,8 +505,19 @@ while True:
     iteration += 1
 
     if iteration >= MAXITERATIONS or len(entities) < 2:
+
+        for idx, net in enumerate(nets):
+            print('Scoring ' + net.id + '...', end='')
+            # score function
+            try:
+                net.score = (2 * entities[idx].damagedealt + entities[idx].health)/1000
+            except(IndexError):
+                # this means entity died, failure!
+                net.score = 0
+            print(net.score)
+
         iteration = 0
-        popindex += 1
+
         textSurf = fontObj.render('Gen: ' + str(generation) + ' Pop: ' + str(popindex), True, WHITE)
         if popindex == len(NNlist1):
             print('all nets in population tested!')
@@ -501,7 +526,6 @@ while True:
             NNlist1 = newGen(NNlist1)
             NNlist2 = newGen(NNlist2)
             generation += 1
-
             print('respawning entities...', end='')
             joe = Entity((np.random.randint(1, MAXDISPX - 1), np.random.randint(1, MAXDISPY - 1)), 0, 15, CYAN,
                          DISPLAYSURF, 'joe')
@@ -514,15 +538,6 @@ while True:
             continue
 
         # set the score for the NNs
-        for idx, net in enumerate(nets):
-            print('Scoring ' + net.id + '...', end='')
-            # score function
-            try:
-                net.score = entities[idx].damagedealt + entities[idx].health
-            except(IndexError):
-                # this means entity died, failure!
-                net.score = 0
-            print(net.score)
 
         print('Need to advance in Population')
         # reset bob and joe and and entities list
@@ -534,11 +549,10 @@ while True:
         entities = [bob, joe]
         print('done')
         print('generation: '+str(generation))
-        print('POPULATION: ' + str(popindex))
-
+        print('POPULATION: ' + str(popindex + 1))
         nets = [NNlist1[popindex], NNlist2[popindex]]
         projectiles = []
-
+        popindex += 1
     # keys
 
     # event handling
@@ -554,14 +568,19 @@ while True:
                 pygame.display.update()
             if event.key == K_n:
                 runnormal = True
-
+            if event.key == K_1:
+                keystate = 0
+            if event.key == K_2:
+                keystate = 1
+            if event.key == K_3:
+                keystate = 2
+            if event.key == K_4:
+                keystate = 3
     # projectile handling
     if projectiles:
         # print('Projectile(s) Present!')
-
         for proj in projectiles:
             proj.updateProjectile()
-
             proj.draw()
             # print(proj.pos)
             for entity in entities:
@@ -580,15 +599,15 @@ while True:
         projectiles[:] = [x for x in projectiles if removeCondition(x)]
 
         # entity handling
-    #    entities[0].dir = entities[0].getCursorAngle()
+
     if entities:
         for idx, entity in enumerate(entities):
             entity.draw()
             entity.iniWedge(True)
-
             entity.inWedge(entities[0])
             entity.inWedge(entities[1])
-
+            for projectile in projectiles:
+                entity.inWedge(projectile)
             # create list of NNs for each entity
             nextmove = nets[idx].out(entity.state())
             # print(str(nextmove.deltaDirection) + " " + str(nextmove.deltaHeading) + " " + str(nextmove.fire))
@@ -598,11 +617,26 @@ while True:
             if nextmove.fire and entity.projectileint >= PROJECTILEINTERVAL:
                 entity.projectileint = 0
                 projectiles.append(
-                    Entity((entity.pos[0], entity.pos[1]), entity.dir, 5, WHITE, DISPLAYSURF, entity.owner))
+                    Entity((entity.pos[0], entity.pos[1]), entity.dir, 5, WHITE, DISPLAYSURF, entity.owner, 'projectile'))
+                entity.totaldamage += 10
     entities[:] = [x for x in entities if not x.health == 0]
+
 
     if runnormal:
         # draw all things here.
+        if keystate == 0:
+            displayupdateinterval = 0
+
+        if keystate == 1:
+            displayupdateinterval = 10
+
+        if keystate == 2:
+            displayupdateinterval = 50
+
+        if keystate == 3:
+            displayupdateinterval = 100
+
+
         tick += 1
 
         if tick >= displayupdateinterval:
