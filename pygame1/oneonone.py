@@ -11,7 +11,7 @@ pygame.font.init()
 pygame.display.set_caption('Animation')
 FPS = 1000
 fpsClock = pygame.time.Clock()
-
+np.random.seed(np.random.randint(1, 1000000))
 # ------------- #
 #     events    #
 # ------------- #
@@ -25,11 +25,11 @@ MOVEDOWN = 115
 #    params     #
 # ------------- #
 MAXITERATIONS = 10000
-MAXHEALTH = 1000
+MAXHEALTH = 10000
 MOVESPEED = 1
-PROJVEL = 3
+PROJVEL = 1
 MAXSPINRATE = 1
-PROJECTILEINTERVAL = 500
+PROJECTILEINTERVAL = 250
 MAXNEURONSPERLAYER = 6
 MAXDISPX = 1918  # 1024
 MAXDISPY = 1005  # 768
@@ -71,12 +71,19 @@ CYAN = (0, 255, 255)
 # ------------- #
 
 
-DISPLAYSURF = pygame.display.set_mode((MAXDISPX, MAXDISPY), 0, 32)
+DISPLAYSURF = pygame.display.set_mode((MAXDISPX, MAXDISPY))
 
 DISPLAYRECT = pygame.Rect(0, 0, MAXDISPX, MAXDISPY)
 
 DISPLAYSURF.fill(BLACK)
 
+# ------------- #
+#     walls     #
+# ------------- #
+
+walls = []
+bigbox = pygame.Rect(0,0,1,1000)
+bigbox.center = (int(math.floor(MAXDISPX/2)),int(math.floor(MAXDISPY/2)))
 
 # ------------- #
 #   Classes     #
@@ -85,6 +92,10 @@ DISPLAYSURF.fill(BLACK)
 
 class Entity:
     def __init__(self, pos, dir, size, color, surf, owner, type='entity'):
+        self.fired = False
+
+        self.hitwall = False
+
         self.type = type
 
         self.endpointupper = (0, 0)
@@ -101,7 +112,7 @@ class Entity:
 
         self.health = MAXHEALTH
 
-        self.prevpos = (0, 0)
+        self.prevdel = (0, 0)
 
         self.hit = False
 
@@ -143,14 +154,8 @@ class Entity:
         self.drawhitboxflag = False
 
     def draw(self):
-        # pygame.gfxdraw.filled_circle(self.SURFACE,
-        # np.round(self.pos[0]).astype(int),
-        # np.round(self.pos[1]).astype(int),
-        # self.size,
-        # self.color)
-
         self.updateHitbox()
-        if self.drawhitboxflag == True:
+        if self.drawhitboxflag:
             self.drawHitbox()
 
     def updatePos(self, dpos):
@@ -160,7 +165,11 @@ class Entity:
         if DISPLAYRECT.collidepoint(pos[0], pos[1]):
             self.pos = pos
             self.truepos += (dpos[0] * MOVESPEED, dpos[1] * MOVESPEED)
-            # pygame.gfxdraw.filled_circle(self.SURFACE, pos[0], pos[1], self.size, self.color)
+        if DISPLAYRECT.contains(self.hitbox):
+            self.hitwall = False
+        else:
+            self.hitwall = True
+            # print('hitting wall!')
 
     def updateProjectile(self):
         self.pos = (self.pos + self.speed)
@@ -240,16 +249,25 @@ class Entity:
 
     def control(self, controlframe):
         ''' Based on the control frame input, the entity will be moved and/or rotated '''
-        self.updatePos(controlframe.deltaDirection)
+
         self.dir += controlframe.deltaHeading
         # normalize angle from -180 < angle <= 180
         self.dir = self.dir % 360
         self.dir = (self.dir + 360) % 360
         if self.dir > 180:
             self.dir -= 360
+        delta = np.array((math.cos(math.radians(self.dir)), math.sin(math.radians(self.dir)))) * controlframe.forwardrelativemag
+        delta2 = np.array((math.cos(math.radians(self.dir + 90)), math.sin(math.radians(self.dir + 90)))) * controlframe.sidewaysrelativemag
+
+        #self.updatePos(controlframe.deltaDirection)
+        self.updatePos(delta+delta2)
+        self.prevdel = controlframe.deltaDirection
+
+
+
 
     def state(self):
-        return self.detectEnemy, self.detectProjectile
+        return self.hitwall, self.detectEnemy, self.detectProjectile, self.fired
 
     def reset(self):
         self.health = MAXHEALTH
@@ -257,6 +275,8 @@ class Entity:
 
 class ControlFrame:
     def __init__(self, id):
+        self.forwardrelativemag = 0
+        self.sidewaysrelativemag = 0
         self.deltaHeading = 0
         self.deltaDirection = (0, 0)
         self.fire = False
@@ -277,7 +297,7 @@ class NN(ControlFrame):
     def __init__(self, owner):
         ControlFrame.__init__(self, owner)
         # initialize weights and biases with gaussian N(0,1) random values
-        self.w1 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER, 2)))
+        self.w1 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER, 4)))
         self.b1 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER,)))
         self.w2 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER, MAXNEURONSPERLAYER)))
         self.b2 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (MAXNEURONSPERLAYER,)))
@@ -285,6 +305,8 @@ class NN(ControlFrame):
         self.b3 = np.array(np.random.uniform(MINRANDPARM, MAXRANDPARM, (5,)))
 
         self.score = 0
+
+        self.relativefitness = 0
 
         self.probability = 0
 
@@ -296,7 +318,7 @@ class NN(ControlFrame):
         # | delta Angle  |
         # | Fire boolean |
         # -              -
-        #
+
         layer1Out = np.tanh(self.w1 @ np.asarray(input) + self.b1)
 
         layer2Out = np.tanh(self.w2 @ np.asarray(layer1Out) + self.b2)
@@ -309,7 +331,9 @@ class NN(ControlFrame):
                          np.piecewise(preIndicator[3], [preIndicator[3] < 0, preIndicator[3] >= 0], [0, 1]),
                          np.tanh(preIndicator[4]))
 
-        self.deltaDirection = (finalLayerOut[0], finalLayerOut[1])
+        #self.deltaDirection = (finalLayerOut[0], finalLayerOut[1])
+        self.forwardrelativemag = finalLayerOut[0]
+        self.sidewaysrelativemag = finalLayerOut[1]
         self.deltaHeading = finalLayerOut[2] * MAXSPINRATE
         self.fire = finalLayerOut[3]
         self.pov += finalLayerOut[4]
@@ -382,13 +406,13 @@ def breed(NN1, NN2, owner):
 
 def mutate(NN):
     """currently mutates all weight clusters (rows) using normal distribution centered at the clusters"""
-    choice = np.random.binomial(1, 0.01)
+    choice = np.random.binomial(1, 0.1)
     if choice:
         multiplier = 100
         print('BIG MUTATION PROBABLE!')
     else:
 
-        choice2 = np.random.binomial(1, 0.05)
+        choice2 = np.random.binomial(1, 0.5)
         if choice2:
             multiplier = 1
         else:
@@ -410,6 +434,7 @@ def mutate(NN):
 
 def setScore(NN):
     pass
+
 
 def rouletteWheel(NNlist, n=1):
     totalfitness = 0
@@ -499,9 +524,6 @@ textRect = textSurf.get_rect()
 textRect.topleft = (10, 10)
 
 while True:
-    # DISPLAYSURF.fill(BLACK)
-
-
     iteration += 1
 
     if iteration >= MAXITERATIONS or len(entities) < 2:
@@ -510,9 +532,9 @@ while True:
             print('Scoring ' + net.id + '...', end='')
             # score function
             try:
-                net.score = (2 * entities[idx].damagedealt + entities[idx].health)/1000
-            except(IndexError):
-                # this means entity died, failure!
+                net.score = (entities[idx].damagedealt * entities[idx].damagedealt / entities[idx].totaldamage) + entities[idx].health/MAXHEALTH
+            except(ZeroDivisionError):
+                # this means no damage!
                 net.score = 0
             print(net.score)
 
@@ -536,8 +558,6 @@ while True:
             textSurf = fontObj.render('Gen: ' + str(generation) + ' Pop: ' + str(popindex), True, WHITE)
             print('done!')
             continue
-
-        # set the score for the NNs
 
         print('Need to advance in Population')
         # reset bob and joe and and entities list
@@ -610,6 +630,7 @@ while True:
                 entity.inWedge(projectile)
             # create list of NNs for each entity
             nextmove = nets[idx].out(entity.state())
+            entity.fired = False
             # print(str(nextmove.deltaDirection) + " " + str(nextmove.deltaHeading) + " " + str(nextmove.fire))
             entity.control(nextmove)
             entity.fov = nextmove.pov
@@ -619,19 +640,20 @@ while True:
                 projectiles.append(
                     Entity((entity.pos[0], entity.pos[1]), entity.dir, 5, WHITE, DISPLAYSURF, entity.owner, 'projectile'))
                 entity.totaldamage += 10
+                entity.fired = True
     entities[:] = [x for x in entities if not x.health == 0]
 
 
     if runnormal:
         # draw all things here.
         if keystate == 0:
-            displayupdateinterval = 0
+            displayupdateinterval = 5
 
         if keystate == 1:
             displayupdateinterval = 10
 
         if keystate == 2:
-            displayupdateinterval = 50
+            displayupdateinterval = 25
 
         if keystate == 3:
             displayupdateinterval = 100
@@ -658,6 +680,8 @@ while True:
                                              entity.size,
                                              entity.color)
 
+            #n 2pygame.draw.rect(DISPLAYSURF,WHITE,bigbox,5)
+            pygame.draw.rect(DISPLAYSURF, WHITE, DISPLAYRECT, 2)
             pygame.display.update()
             DISPLAYSURF.fill(BLACK)
             DISPLAYSURF.blit(textSurf, textRect)
