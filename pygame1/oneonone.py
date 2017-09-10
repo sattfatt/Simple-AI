@@ -351,6 +351,8 @@ class NN(ControlFrame):
 def getScore(NN):
     return NN.score
 
+def getRelativeFitness(NN):
+    return NN.relativefitness
 
 def breed(NN1, NN2, owner):
     '''Takes in two NN's and outputs a child with randomly chosen Neuron weight clusters from both'''
@@ -441,7 +443,7 @@ def rouletteWheel(NNlist, n=1):
     offset = 0
     selected = []
     for i in range(len(NNlist)):
-        totalfitness += NNlist[i].score
+        totalfitness += NNlist[i].relativefitness
 
     if totalfitness == 0:
         totalfitness = 1
@@ -467,7 +469,7 @@ def rouletteWheel(NNlist, n=1):
 def newGen(NNlist):
     children = []
     # sort the list of nets
-    sortlist = sorted(NNlist, key=getScore, reverse=True)
+    sortlist = sorted(NNlist, key=getRelativeFitness, reverse=True)
 
     # pass on the top ciel(1/5*POPULATION) results
     m = len(NNlist)
@@ -537,6 +539,15 @@ while True:
                 # this means no damage!
                 net.score = 0
             print(net.score)
+        totalscore = 0
+        for idx, net in enumerate(nets):
+            totalscore += net.score
+        for idx, net in enumerate(nets):
+            try:
+                net.relativefitness = net.score/totalscore
+            except(ZeroDivisionError):
+                net.relativefitness = 0
+
 
         iteration = 0
 
